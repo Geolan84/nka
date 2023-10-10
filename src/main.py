@@ -7,7 +7,7 @@ from admin.router import router as router_admin
 
 origins = [
     "http://localhost",
-    "http://localhost:8080",
+    "http://localhost:3000",
 ]
 
 app = FastAPI(title="NKA")
