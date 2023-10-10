@@ -14,4 +14,4 @@ class UserRegister(BaseModel):
     patronymic: Optional[str] = None
     qual_id: Optional[int] = None
     prof_id: Optional[int] = None
-    
+

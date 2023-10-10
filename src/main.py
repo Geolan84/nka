@@ -1,14 +1,24 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from auth.router import router as router_auth
 from admin.router import router as router_admin
 
-
-from fastapi import FastAPI
-
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+]
 
 app = FastAPI(title="NKA")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
