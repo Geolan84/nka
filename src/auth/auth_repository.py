@@ -46,10 +46,11 @@ class AuthRepository:
             users LEFT OUTER JOIN users_role USING(user_id)
             WHERE email = $1 AND password = $2;
             """, email, password)
-            return {
-                'user_id': row.get('user_id'),
-                'role': row.get('role_id'),
-            }
+            if row is not None:
+                return {
+                    'user_id': row.get('user_id'),
+                    'role': row.get('role_id'),
+                }
         except Exception as e:
             print(e)
         finally:
