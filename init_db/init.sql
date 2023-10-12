@@ -26,8 +26,10 @@ create table users(
 	first_name VARCHAR(50) not null,
 	second_name VARCHAR(50) not null,
 	patronymic VARCHAR(50),
+	department_id int,
 	qual_id int,
 	prof_id int,
+	foreign key(department_id) references department(department_id) ON DELETE set null,
 	foreign key(qual_id) references qualification(qual_id) ON DELETE set null,
 	foreign key(prof_id) references profession(prof_id) ON DELETE set null
 );
@@ -40,13 +42,13 @@ create table users_role(
 	foreign key(role_id) references roles(role_id) ON DELETE set NULL
 );
 
---Кто кому подчиняется.
-create table subordination(
-	user_id int,
-	head_id int,
-	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
-	foreign key(head_id) references users(user_id) ON DELETE set NULL
-);
+-- Кто кому подчиняется.
+-- create table subordination(
+-- 	user_id int,
+-- 	head_id int,
+-- 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
+-- 	foreign key(head_id) references users(user_id) ON DELETE set NULL
+-- );
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 create table license(
