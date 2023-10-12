@@ -9,9 +9,9 @@ class AuthRepository:
         try:
             connection = await asyncpg.connect(DATABASE_URL)
             async with connection.transaction():
-                new_user_id = await connection.fetchval('insert into users values(default, $1, $2, $3, $4, $5, $6, $7) returning user_id;', 
+                new_user_id = await connection.fetchval('insert into users values(default, $1, $2, $3, $4, $5, $6, $7, $8) returning user_id;', 
                                                        user.get('email'), user.get('password'), user.get('first_name'),
-                                                       user.get('second_name'), user.get('patronymic'),
+                                                       user.get('second_name'), user.get('patronymic'), None,
                                                        user.get('qual_id'), user.get('prof_id'))
                 await connection.execute('insert into users_role values($1, $2);', new_user_id, Role.ADMIN.value)
                 await connection.execute('update license set is_activated=true where code=$1', user.get('license'))

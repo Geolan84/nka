@@ -15,6 +15,3 @@ SECRET = config("SECRET")
 ALGORITHM = config("ALGORITHM")
 ADMIN_PASS = config("ADMIN_PASS")
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
-
-

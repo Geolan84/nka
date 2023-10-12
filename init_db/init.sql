@@ -53,3 +53,11 @@ create table license(
 	code uuid DEFAULT uuid_generate_v4 (),
 	is_activated boolean not null
 );
+
+create table department(
+	department_id serial,
+	department_name VARCHAR(100) not null,
+	head_department_id int,
+	PRIMARY KEY(department_id),
+	foreign key(head_department_id) references department(department_id)
+);
