@@ -64,7 +64,7 @@ class StructRepository:
             connection = await asyncpg.connect(DATABASE_URL)
             async with connection.transaction():
                 new_user_id = await connection.fetchval('insert into users values(default, $1, $2, $3, $4, $5, $6, $7, $8) returning user_id;', 
-                                                       user.get('email'), user.get('password'), user.get('first_name'),
+                                                       user.get('email'), 'ТУТПАРОЛЬ', user.get('first_name'),
                                                        user.get('second_name'), user.get('patronymic'), user.get('department_id'),
                                                        user.get('qual_id'), user.get('prof_id'))
                 await connection.execute('insert into users_role values($1, $2);', new_user_id, Role.HEAD.value if user.get('is_head') else Role.EMPLOYEE.value)
@@ -78,7 +78,7 @@ class StructRepository:
     async def get_user(user_id: int):
         try:
             connection = await asyncpg.connect(DATABASE_URL)
-            user = await connection.fetchrow('select * from users where user_id=$1;', user_id)
+            user = await connection.fetchrow('select user_id, email, first_name, second_name, patronymic, department_id, qual_id, prof_id from users where user_id=$1;', user_id)
             return dict(user)
         except Exception as e:
             print(e)
