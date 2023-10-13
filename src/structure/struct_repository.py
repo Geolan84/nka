@@ -43,11 +43,17 @@ class StructRepository:
             answer = {}
             connection = await asyncpg.connect(DATABASE_URL)
             if department_id is None:
-                users = await connection.fetch('select * from users where department_id is null;')
-                departments = await connection.fetch('select * from department where head_department_id is null;')
+                current_department = await connection.fetchrow('select * from department where head_department_id is null;')
             else:
-                users = await connection.fetch('select * from users where department_id=$1;', department_id)
-                departments = await connection.fetch('select * from department where head_department_id=$1;', department_id)
+                current_department = await connection.fetchrow('select * from department where department_id = $1;', department_id)
+            if current_department is None:
+                raise Exception("No department here!")
+             
+            users = await connection.fetch('select * from users where department_id=$1;', current_department.get('department_id'))
+            departments = await connection.fetch('select * from department where head_department_id=$1;', current_department.get('department_id'))
+
+            answer["department_name"] = current_department.get('department_name')
+            answer["department_id"] = current_department.get('department_id')
             answer["departments"] = [dict(x) for x in departments]
             answer["users"] = [dict(x) for x in users]
             return answer
@@ -86,8 +92,6 @@ class StructRepository:
         finally:
             await connection.close()
 
-    def __dict_to_sql():
-        pass
 
     @staticmethod
     async def edit_user(user: dict):

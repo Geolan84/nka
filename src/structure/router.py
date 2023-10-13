@@ -30,8 +30,8 @@ async def get_structure(department_id: int | None = None):
     try:
         res = await struct.get_department(department_id)
         return res
-    except Exception:
-        pass
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
     
     
     
