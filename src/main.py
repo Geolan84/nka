@@ -5,6 +5,7 @@ import uvicorn
 from auth.router import router as router_auth
 from admin.router import router as router_admin
 from structure.router import router as router_struct
+from applications.router import router as router_applications
 
 origins = [
     "http://localhost",
@@ -29,6 +30,7 @@ def read_root():
 app.include_router(router=router_auth)
 app.include_router(router=router_admin)
 app.include_router(router=router_struct)
+app.include_router(router=router_applications)
 
 
 if __name__ == "__main__":

@@ -22,7 +22,8 @@ def create_email_renew_token(data: dict):
 def read_token(token: str):
     try:
         payload = jwt.decode(token, SECRET, algorithms=[ALGORITHM])
-        return (payload["user_id"], payload["role"])
+        return payload
+        # return (payload["user_id"], payload["role"])
     except JWTError:
         return None
     

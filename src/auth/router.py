@@ -1,5 +1,4 @@
-from fastapi import APIRouter, status, Depends, HTTPException
-from fastapi.responses import Response
+from fastapi import APIRouter, HTTPException
 from token_manager import create_access_token
 
 from auth.auth_repository import AuthRepository as auth
