@@ -47,11 +47,13 @@ create table application_types(
 create table applications(
 	application_id serial,
 	type_id int,
+	user_id int,
 	note varchar(400),
 	start_date date not null,
 	end_date date not null,
 	primary key(application_id),
-	foreign key(type_id) references application_types(type_id) on delete set null
+	foreign key(type_id) references application_types(type_id) on delete set null,
+	foreign key(user_id) references users(user_id)
 );
 
 create table application_status(

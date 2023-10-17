@@ -6,6 +6,11 @@ class Role(IntEnum):
     HEAD = 2
     ADMIN = 3
 
+class ApplicationStatus(IntEnum):
+    PROCESSING = 1
+    ACCESSED = 2
+    REJECTED = 3
+
 DB_USER = config("DB_USER")
 DB_PASS = config("DB_PASS")
 DB_NAME = config("DB_NAME")
