@@ -5,7 +5,7 @@
 2) Активировать виртуальную среду:
 
 * на windows это команда: winvenv/Scripts/activate
-* на Linux/MacOS: source myvenv/bin/activate
+* на Linux/MacOS: source venv/bin/activate
 
 3) Далее пишем команду python src/main.py
 
