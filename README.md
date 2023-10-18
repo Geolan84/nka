@@ -7,7 +7,7 @@
 * на windows это команда: winvenv/Scripts/activate
 * на Linux/MacOS: source myvenv/bin/activate
 
-3) Далее пишем команду python src/main.python
+3) Далее пишем команду python src/main.py
 
 ---
 
