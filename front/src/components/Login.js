@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../css/Login.css";
+import logo from '../images/logo.jpg';
 
 const Login = () => {
-  const navigate = useNavigate(); // Используйте useNavigate для доступа к объекту history
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [, setErrorMessage] = useState("");
@@ -28,7 +30,7 @@ const Login = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("user_id", user_id);
         localStorage.setItem("role", role);
-        navigate("/profile"); // Используйте navigate для перехода
+        navigate("/profile");
       } else {
         setErrorMessage(data.msg);
       }
@@ -37,46 +39,45 @@ const Login = () => {
     }
   };
 
+  const handleReturn = () => {
+    navigate("/");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     submitLogin();
   };
 
   return (
-    <div className="column">
-      <form className="box" onSubmit={handleSubmit}>
-        <h1 className="title has-text-centered">Вход</h1>
-        <div className="field">
-          <label className="label">Почта</label>
-          <div className="control">
-            <input
-              type="email"
-              placeholder="Введите почту"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input"
-              required
-            />
-          </div>
-        </div>
-        <div className="field">
-          <label className="label">Пароль</label>
-          <div className="control">
-            <input
-              type="password"
-              placeholder="Введите пароль"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input"
-              required
-            />
-          </div>
-        </div>
-        <br />
-        <button className="button is-primary" type="submit">
-          Войти
-        </button>
-      </form>
+    <div>
+      <div className="header">
+        <img src={logo} alt="Logo" />
+        <button className="login-button" onClick={handleReturn}>Вернуться</button>
+      </div>
+      <div className="login-container">
+        <h1 className="login-title">Вход</h1>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Почта"
+            className="login-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Пароль"
+            className="login-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit" className="login-button">
+            Войти
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

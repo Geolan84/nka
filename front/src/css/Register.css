@@ -1,0 +1,95 @@
+/* Register.css */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #007bff;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+  }
+  
+  .header img {
+    width: 300px;
+    height: 150px;
+    margin-right: 10px;
+  }
+  
+  .header button {
+    background-color: #ffffff;
+    color: #070707;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+  }
+  
+  .header button:hover {
+    background-color: #afadad;
+    text-decoration: underline;
+  }
+  
+  .register-container {
+    display: flex;
+    flex-direction: column;
+    background: #f5f5f5;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    width: 600px; /* Изменим width вместо max-width */
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .register-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .register-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .register-input {
+    margin-bottom: 10px;
+    border: none;
+    background: none;
+    border-bottom: 2px solid #007bff;
+    padding: 5px;
+    width: 80%; /* Изменим ширину поля ввода на 100% */
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+  
+  .register-input:focus {
+    border-color: #0056b3;
+    outline: none;
+  }
+  
+  .register-label {
+    font-size: 18px; /* Изменим размер шрифта для label */
+    font-weight: bold; /* Добавим жирный шрифт для label */
+    color: #1d1d1d; /* Изменим цвет текста label */
+  }
+  
+  .register-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    width: 50%;
+    padding: 8px 16px; /* Уменьшим отступы кнопки */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    margin: 0 auto; /* Центрируем кнопку */
+  }
+  
+  .register-button:hover {
+    background-color: #0056b3;
+  }
+  

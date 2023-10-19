@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../css/Register.css";
+import logo from '../images/logo.jpg';
 
 const RegisterProf = () => {
   const navigate = useNavigate();
@@ -19,8 +21,8 @@ const RegisterProf = () => {
         email: email,
         password: password,
         first_name: firstName,
-        second_name: secondName
-      })
+        second_name: secondName,
+      }),
     };
 
     try {
@@ -39,88 +41,98 @@ const RegisterProf = () => {
     }
   };
 
+  const handleReturn = () => {
+    navigate("/");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     submitRegistration();
   };
 
   return (
-    <div className="column">
-      <form className="box" onSubmit={handleSubmit}>
-        <h1 className="title has-text-centered">Регистрация</h1>
-        <div className="field">
-          <label className="label">Почта</label>
-          <div className="control">
-            <input
-              type="email"
-              placeholder="Введите свою почту"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input"
-              required
-            />
+    <div>
+      <div className="header">
+        <img src={logo} alt="Logo" />
+        <button className="login-button" onClick={handleReturn}>Вернуться</button>
+      </div>
+      <div className="register-container">
+        <form className="box register-form" onSubmit={handleSubmit}>
+          <h1 className="register-title">Регистрация</h1>
+          <div className="field">
+            <label className="register-label">Почта</label>
+            <div className="control">
+              <input
+                type="email"
+                placeholder="Введите свою почту"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="register-input"
+                required
+              />
+            </div>
           </div>
-        </div>
-        <div className="field">
-          <label className="label">Пароль</label>
-          <div className="control">
-            <input
-              type="password"
-              placeholder="Введите пароль"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input"
-              required
-            />
+          <div className="field">
+            <label className="register-label">Пароль</label>
+            <div className="control">
+              <input
+                type="password"
+                placeholder="Введите пароль"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="register-input"
+                required
+              />
+            </div>
           </div>
-        </div>
-        <div className="field">
-          <label className="label">Ключ</label>
-          <div className="control">
-            <input
-              type="text"
-              placeholder="Введите лицензионный ключ"
-              value={key}
-              onChange={(e) => setKey(e.target.value)}
-              className="input"
-              required
-            />
+          <div className="field">
+            <label className="register-label">Ключ</label>
+            <div className="control">
+              <input
+                type="text"
+                placeholder="Введите лицензионный ключ"
+                value={key}
+                onChange={(e) => setKey(e.target.value)}
+                className="register-input"
+                required
+              />
+            </div>
           </div>
-        </div>
-        <div className="field">
-          <label className="label">Имя</label>
-          <div className="control">
-            <input
-              type="text"
-              placeholder="Введите своё имя"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="input"
-              required
-            />
+          <div className="field">
+            <label className="register-label">Имя</label>
+            <div className="control">
+              <input
+                type="text"
+                placeholder="Введите своё имя"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="register-input"
+                required
+              />
+            </div>
           </div>
-        </div>
-        <div className="field">
-          <label className="label">Фамилия</label>
-          <div className="control">
-            <input
-              type="text"
-              placeholder="Введите свою фамилию"
-              value={secondName}
-              onChange={(e) => setSecondName(e.target.value)}
-              className="input"
-              required
-            />
+          <div className="field">
+            <label className="register-label">Фамилия</label>
+            <div className="control">
+              <input
+                type="text"
+                placeholder="Введите свою фамилию"
+                value={secondName}
+                onChange={(e) => setSecondName(e.target.value)}
+                className="register-input"
+                required
+              />
+            </div>
           </div>
-        </div>
-        <br />
-        <button className="button is-primary" type="submit">
-          Зарегистрироваться
-        </button>
-        {errorMessage && (
-          <p className="has-text-danger">{errorMessage}</p>
-        )}
-      </form>
+          <br />
+          <button className="register-button is-primary" type="submit">
+            Зарегистрироваться
+          </button>
+          {errorMessage && (
+            <p className="has-text-danger">{errorMessage}</p>
+          )}
+        </form>
+      </div>
     </div>
   );
 };
