@@ -5,11 +5,39 @@ from datetime import datetime
 
 class ApplicationsRepository:
 
+    # @staticmethod
+    # async def get_statistic(user: dict):
+    #     try:
+    #         connection = await asyncpg.connect(DATABASE_URL)
+
+    #     except Exception as e:
+    #         print(e)
+    #     finally:
+    #         await connection.close()
+
     @staticmethod
-    async def get_statistic(user: dict):
+    async def get_active_apps(head_id: int):
         try:
             connection = await asyncpg.connect(DATABASE_URL)
+            department_id = await connection.fetchval("select department_id from users where user_id = $1;", head_id)
+            apps = await connection.fetch("select * from users join applications using(user_id) join status_log using(application_id) where department_id = 1 and status_id = 1;")
+            #await connection.fetch()
+        except Exception as e:
+            print(e)
+        finally:
+            await connection.close()
 
+    @staticmethod
+    async def get_head(user_id: int):
+        try:
+            connection = await asyncpg.connect(DATABASE_URL)
+            department_id = await connection.fetchval("select department_id from users where user_id = $1;", user_id)
+            head = await connection.fetchrow("""
+            select user_id, email, first_name, second_name, patronymic, role_id,
+            department_id, department_name from users join department using(department_id) join users_role using(user_id)
+            where role_id > 1 and department.department_id = $1;
+                                             """, department_id)
+            return head if head is None else dict(head)
         except Exception as e:
             print(e)
         finally:

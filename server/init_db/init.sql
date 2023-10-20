@@ -1,6 +1,20 @@
+drop table if exists license cascade;
+drop table if exists users cascade;
+drop table if exists users_role cascade;
+drop table if exists profession cascade;
+drop table if exists qualification cascade;
+drop table if exists department cascade;
+drop table if exists roles cascade;
+drop table if exists application_status cascade;
+drop table if exists application_types cascade;
+drop table if exists applications cascade;
+drop table if exists status_log cascade;
+
+
+
 --Роль: сотрудник, руководитель, администратор
 create table roles(
-	role_id serial primary key,
+	role_id int primary key,
 	role_name varchar(50) not null
 );
 
@@ -67,7 +81,29 @@ create table status_log(
 	application_id int not null,
 	status_id int not null,
 	moment timestamp not null,
+	verifier_id int not null,
 	foreign key(status_id) references application_status(status_id),
+	foreign key(verifier_id) references users(user_id),
 	foreign key(application_id) references applications(application_id),
 	primary key(record_id)
-)
+);
+
+insert into roles
+values
+(1, 'Сотрудник'),
+(2, 'Руководитель'),
+(3, 'Администратор');
+
+insert into application_types
+values
+(1, 'Основной отпуск'),
+(2, 'Дополнительный оплачиваемый отпуск'),
+(3, 'Отпуск без сохранения з/п'),
+(4, 'Отпуск по уходу за ребёнком'),
+(5, 'Учебный отпуск'),
+(6, 'Донорский день');
+
+insert into application_status values
+(1, 'На согласовании'),
+(2, 'Согласовано'),
+(3, 'Отказано');
