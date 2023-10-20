@@ -4,14 +4,15 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale, setDefaultLocale } from "react-datepicker";
 import ru from "date-fns/locale/ru";
-import "../css/Vacation.css";
+import "../css/VacationType.css";
 
 registerLocale("ru", ru);
 
-const VacationPage = ({ onClose }) => {
+const VacationTypePage = ({ onClose }) => {
   const [comment, setComment] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [vacationType, setVacationType] = useState(1);
   const navigate = useNavigate();
   const user_id = localStorage.getItem("user_id");
   const [user, setUser] = useState(null);
@@ -23,7 +24,7 @@ const VacationPage = ({ onClose }) => {
   };
 
   const handleBackInProf = () => {
-    onClose(); // Вызываем переданную функцию для закрытия модального окна
+    onClose();
   };
 
   const handleStartDateChange = (date) => {
@@ -32,6 +33,10 @@ const VacationPage = ({ onClose }) => {
 
   const handleEndDateChange = (date) => {
     setEndDate(date);
+  };
+
+  const handleVacationTypeChange = (e) => {
+    setVacationType(parseInt(e.target.value, 10));
   };
 
   const handleSendVacationRequest = async () => {
@@ -43,18 +48,17 @@ const VacationPage = ({ onClose }) => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          type: 1,
+          type: vacationType,
           note: comment,
-          start_date: startDate.toISOString().split('T')[0],
-          end_date: endDate.toISOString().split('T')[0],
+          start_date: startDate.toISOString().split("T")[0],
+          end_date: endDate.toISOString().split("T")[0],
         }),
       });
 
       if (response.ok) {
         console.log("Заявка на отпуск отправлена");
-        onClose(); // Закрыть модальное окно после успешной отправки
+        onClose();
       } else {
-        console.log(startDate.toISOString().split('T')[0]);
         console.error("Ошибка при отправке заявки на отпуск");
       }
     } catch (error) {
@@ -65,12 +69,15 @@ const VacationPage = ({ onClose }) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/struct/get_user?user_id=${user_id}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `http://localhost:8080/struct/get_user?user_id=${user_id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.ok) {
           const userData = await response.json();
@@ -96,28 +103,43 @@ const VacationPage = ({ onClose }) => {
   };
 
   return (
-    <div className="container-vac">
-      <div className="header-vac">
-        <h1>Планирование основного отпуска</h1>
+    <div className="container-vac-type">
+      <div className="header-vac-type">
+        <h1>Планирование отпуска</h1>
       </div>
-      <div className="user-info-vac">
+      <div className="user-info-vac-type">
         {user ? (
-          <p>{user.first_name} {user.second_name}</p>
+          <p>
+            {user.first_name} {user.second_name}
+          </p>
         ) : (
           <p>Информация о пользователе не найдена</p>
         )}
       </div>
-      <div className="count-days-vac">
+      <div className="count-days-vac-type">
         Выбрано {countSelectedDays()} дней отпуска
       </div>
-      <label className="comment-label-vac">Комментарий:</label>
+      <label className="date-label-vac-type">Тип отпуска:</label>
+      <select
+        value={vacationType}
+        onChange={handleVacationTypeChange}
+        className="vacation-type-select"
+      >
+        <option value={1}>Основной отпуск</option>
+        <option value={2}>Дополнительный оплачиваемый отпуск</option>
+        <option value={3}>Отпуск без сохранения з/п</option>
+        <option value={4}>Отпуск по уходу за ребёнком</option>
+        <option value={5}>Учебный отпуск</option>
+        <option value={6}>Донорский день</option>
+      </select>
+      <label className="comment-label-vac-type">Комментарий:</label>
       <input
         type="text"
         value={comment}
         onChange={handleCommentChange}
-        className="comment-input-vac"
+        className="comment-input-vac-type"
       />
-      <label className="date-label-vac">Дата начала:</label>
+      <label className="date-label-vac-type">Дата начала:</label>
       <DatePicker
         selected={startDate}
         onChange={handleStartDateChange}
@@ -126,9 +148,9 @@ const VacationPage = ({ onClose }) => {
         endDate={endDate}
         locale="ru"
         dateFormat="yyyy-MM-dd"
-        className="date-picker-vac"
+        className="date-picker-vac-type"
       />
-      <label className="date-label-vac">Дата окончания:</label>
+      <label className="date-label-vac-type">Дата окончания:</label>
       <DatePicker
         selected={endDate}
         onChange={handleEndDateChange}
@@ -138,14 +160,14 @@ const VacationPage = ({ onClose }) => {
         minDate={startDate}
         locale="ru"
         dateFormat="yyyy-MM-dd"
-        className="date-picker-vac"
+        className="date-picker-vac-type"
       />
-      <div className="action-buttons-vac">
+      <div className="action-buttons-vac-type">
         <button onClick={handleSendVacationRequest}>Отправить заявку на отпуск</button>
-        <button onClick={handleBackInProf}>Назад в профиль</button> {/* Вызываем функцию при нажатии на кнопку */}
+        <button onClick={handleBackInProf}>Назад в профиль</button>
       </div>
     </div>
   );
 };
 
-export default VacationPage;
+export default VacationTypePage;

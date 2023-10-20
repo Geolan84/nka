@@ -32,6 +32,8 @@
     background-color: #007bff;
     color: #fff;
     border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
