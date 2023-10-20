@@ -2,6 +2,7 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.responses import Response
 from config import ADMIN_PASS
 
+
 from admin.admin_repository import AdminRepository as admin
 
 
@@ -19,4 +20,3 @@ async def get_new_code(password: str):
         )
     new_code = await admin.get_new_code()
     return {'Your new license': new_code}
-        

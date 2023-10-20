@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #007bff;
+    background: #ffffff;
     padding: 10px;
     text-align: center;
     border-radius: 5px;
@@ -23,6 +23,8 @@
     cursor: pointer;
     transition: background-color 0.3s;
     border-radius: 5px;
+    font-family: Roboto;
+    font-size: 25px;
   }
   
   .header button:hover {
@@ -59,7 +61,7 @@
     margin-bottom: 10px;
     border: none;
     background: none;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid #57C2FF;
     padding: 5px;
     width: 80%; /* Изменим ширину поля ввода на 100% */
     font-size: 16px;
@@ -67,7 +69,7 @@
   }
   
   .register-input:focus {
-    border-color: #0056b3;
+    border-color: #57C2FF;
     outline: none;
   }
   
@@ -78,7 +80,7 @@
   }
   
   .register-button {
-    background-color: #007bff;
+    background-color: #57C2FF;
     color: #fff;
     border: none;
     width: 50%;
@@ -87,9 +89,11 @@
     transition: background-color 0.3s;
     border-radius: 5px;
     margin: 0 auto; /* Центрируем кнопку */
+    font-family: Roboto;
+    font-size: 25px;
   }
   
   .register-button:hover {
-    background-color: #0056b3;
+    background-color: #57C2FF;
   }
   
