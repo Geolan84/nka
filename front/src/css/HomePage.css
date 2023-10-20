@@ -70,7 +70,7 @@
 .gray {
   color: #242424;
 }
-h1 {
+.h1-home {
   margin-top: 50px;
   font-size: 48px;
   margin-bottom: 50px;
@@ -80,44 +80,44 @@ h1 {
     font-family: Roboto;
 }
 
-h2 {
+.h2-home {
   font-size: 36px;
   margin-bottom: 20px;
   font-family: Roboto;
 }
 
-h3 {
+.h3-home {
   margin-top: 40px;
   font-size: 30px;
   margin-bottom: 20px;
     font-family: Roboto;
 }
-h4 {
+.h4-home {
   font-size: 48px;
   margin-bottom: 20px;
   margin-top: 20px;
   font-family: Roboto;
 }
 
-p {
+.p-home {
   font-size: 18px;
   margin-bottom: 30px;
     font-family: Roboto;
 }
 
-a {
+.a-home {
   text-decoration: none;
   font-size: 24px;
   color: #FFFFFF;
   transition: color 0.3s;
 }
 
-a:hover {
+.a-home:hover {
   color: #57C2FF;
+  margin: 0;
+  padding: 0
 }
 
-*{margin: 0;
-padding: 0}
 
 .Top_Menu{
   margin-right: 25px;
@@ -126,25 +126,6 @@ padding: 0}
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-}
-
-.li{
-  display: flex;
-  vertical-align: middle;
-  font-family: Roboto;
-  font-size: 36px;
-  margin: 25px;
-  width: 200px;
-  height: 70px;
-  background: #242424 ;
-  color: #FFFFFF;
-  border-radius: 20px;
-  justify-content: center;
-  align-items: center;
-  margin-left: 25px;
-  margin-inside: center;
-  margin-top: 40px;
-  margin-left: 25px;
 }
 
 .text-container a{
@@ -195,7 +176,7 @@ padding: 0}
       justify-content: center;
   }
 
-  .text{
+  .text-home{
   display: flex;
   vertical-align: middle;
   font-family: Roboto;

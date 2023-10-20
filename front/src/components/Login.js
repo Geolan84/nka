@@ -50,7 +50,7 @@ const Login = () => {
 
   return (
     <div>
-      <div className="header">
+      <div className="header0">
         <img src={logo} alt="Logo" />
         <button className="login-button" onClick={handleReturn}>Вернуться</button>
       </div>

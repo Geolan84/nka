@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale, setDefaultLocale } from "react-datepicker";
-import ru from "date-fns/locale/ru"; // Импортируйте русскую локализацию
+import ru from "date-fns/locale/ru";
+import "../css/Vacation.css";
 
-registerLocale("ru", ru); // Регистрируйте русскую локализацию
+registerLocale("ru", ru);
 
 const VacationPage = () => {
   const [comment, setComment] = useState("");
@@ -43,17 +44,16 @@ const VacationPage = () => {
         body: JSON.stringify({
           type: 1,
           note: comment,
-          start_date: startDate.toISOString().split('T')[0], // Форматирование даты в "yyyy-MM-dd"
-          end_date: endDate.toISOString().split('T')[0], // Форматирование даты в "yyyy-MM-dd"
+          start_date: startDate.toISOString().split('T')[0],
+          end_date: endDate.toISOString().split('T')[0],
         }),
       });
 
       if (response.ok) {
-        // Запрос успешно отправлен
         console.log("Заявка на отпуск отправлена");
-        navigate("/profile"); // Перенаправляем на профиль после отправки заявки
+        navigate("/profile");
       } else {
-        console.log(startDate.toISOString().split('T')[0])
+        console.log(startDate.toISOString().split('T')[0]);
         console.error("Ошибка при отправке заявки на отпуск");
       }
     } catch (error) {
@@ -85,19 +85,38 @@ const VacationPage = () => {
     fetchUserProfile();
   }, []);
 
+  const countSelectedDays = () => {
+    if (startDate && endDate) {
+      const diffTime = Math.abs(endDate - startDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays;
+    }
+    return 0;
+  };
+
   return (
-    <div>
-      <h1>Планирование основного отпуска</h1>
-      {user ? (
-        <div>
+    <div className="container-vac">
+      <div className="header-vac">
+        <h1>Планирование основного отпуска</h1>
+      </div>
+      <div className="user-info-vac">
+        {user ? (
           <p>{user.first_name} {user.second_name}</p>
-        </div>
-      ) : (
-        <p>Информация о пользователе не найдена</p>
-      )}
-      <label>Комментарий:</label>
-      <input type="text" value={comment} onChange={handleCommentChange} />
-      <label>Дата начала:</label>
+        ) : (
+          <p>Информация о пользователе не найдена</p>
+        )}
+      </div>
+      <div className="count-days-vac">
+        Выбрано {countSelectedDays()} дней отпуска
+      </div>
+      <label className="comment-label-vac">Комментарий:</label>
+      <input
+        type="text"
+        value={comment}
+        onChange={handleCommentChange}
+        className="comment-input-vac"
+      />
+      <label className="date-label-vac">Дата начала:</label>
       <DatePicker
         selected={startDate}
         onChange={handleStartDateChange}
@@ -106,9 +125,9 @@ const VacationPage = () => {
         endDate={endDate}
         locale="ru"
         dateFormat="yyyy-MM-dd"
+        className="date-picker-vac"
       />
-      <br />
-      <label>Дата окончания:</label>
+      <label className="date-label-vac">Дата окончания:</label>
       <DatePicker
         selected={endDate}
         onChange={handleEndDateChange}
@@ -118,10 +137,12 @@ const VacationPage = () => {
         minDate={startDate}
         locale="ru"
         dateFormat="yyyy-MM-dd"
+        className="date-picker-vac"
       />
-      <br />
-      <button onClick={handleSendVacationRequest}>Отправить заявку на отпуск</button>
-      <button onClick={handleBackInProf}>Назад в профиль</button>
+      <div className="action-buttons-vac">
+        <button onClick={handleSendVacationRequest}>Отправить заявку на отпуск</button>
+        <button onClick={handleBackInProf}>Назад в профиль</button>
+      </div>
     </div>
   );
 };

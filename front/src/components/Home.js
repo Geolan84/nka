@@ -16,24 +16,24 @@ const HomePage = () => {
       </div>
       
             <div className="container">
-                <h4>Добро пожаловать в "ЭНКА"!</h4>
-                <h2>- ваш умный и надежный помощник в мире отпусков!</h2>
-                <h3>Это инструмент, который автоматизирует процессы планирования, согласования и контроля отпусков, что
+                <h4 className="h4-home">Добро пожаловать в "ЭНКА"!</h4>
+                <h2 className="h2-home">- ваш умный и надежный помощник в мире отпусков!</h2>
+                <h3 className="h3-home">Это инструмент, который автоматизирует процессы планирования, согласования и контроля отпусков, что
                     позволяет сэкономить время и ресурсы, а также избежать ошибок и нарушений.
                 </h3>
                 <div className="block">
-                    <div className="h3">
-                        <Link to="/register">Начать планировать</Link>
+                    <div className="h3-b-home">
+                        <a className="a-home"><Link to="/register">Начать планировать</Link></a>
                     </div>
                 </div>
             </div>
             <div className="gray">
-                <h1>В чем преимущества платформы?</h1>
+                <h1 className="h1-home">В чем преимущества платформы?</h1>
             </div>
             <div className="text_container">
-                <div className="text">Быстрый старт</div>
-                <div className="text">Понятный интерфейс</div>
-                <div className="text">Простота использования</div>
+                <div className="text-home">Быстрый старт</div>
+                <div className="text-home">Понятный интерфейс</div>
+                <div className="text-home">Простота использования</div>
             </div>
             <div className="gray">
                 <h1>Этот сервис подходит Вам, если:</h1>
@@ -73,7 +73,7 @@ const HomePage = () => {
                 </div>
             </div>
 
-            <p>Copyrights 2023 &copy; yenka.ru</p>
+            <p className="p-home">Copyrights 2023 &copy; yenka.ru</p>
         </div>
     );
 };

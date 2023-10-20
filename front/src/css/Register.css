@@ -37,7 +37,7 @@
     border-radius: 5px;
     padding: 20px;
     text-align: center;
-    width: 600px; /* Изменим width вместо max-width */
+    width: 500px; /* Изменим width вместо max-width */
     margin: 0 auto;
     position: absolute;
     top: 50%;

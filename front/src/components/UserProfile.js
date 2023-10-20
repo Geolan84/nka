@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../css/UserProfile.css";
-import logo from '../images/logo.jpg';
+import logo from '../images/logo.svg';
 
 const UserProfile = () => {
     const [user, setUser] = useState(null);
@@ -63,7 +63,7 @@ const UserProfile = () => {
 
     return (
         <div>
-        <div className="header">
+        <div className="header0">
             <img src={logo} alt="Logo" />
             <button className="user-logout" onClick={handleLogout}>Выйти</button>
         </div>
@@ -90,10 +90,7 @@ const UserProfile = () => {
                     <>
                         <p>Имя: {user.first_name}</p>
                         <p>Фамилия: {user.second_name}</p>
-                        <p>Департамент: </p>
                         <p>Отдел: </p>
-                        <p>Сектор: </p>
-                        <p>Должность: </p>
                         <p>Email: {user.email}</p>
                         
                     </>

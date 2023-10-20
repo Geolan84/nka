@@ -1,0 +1,76 @@
+/* Vacation.css */
+.container-vac {
+    text-align: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    margin: 0 auto;
+    max-width: 600px;
+    margin-top: 20px;
+  }
+  
+  .header-vac h1 {
+    font-size: 24px;
+  }
+  
+  .user-info-vac p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .count-days-vac {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .comment-label-vac,
+  .date-label-vac {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1d1d1d;
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+  }
+  
+  .comment-input-vac,
+  .date-picker-vac {
+    margin-bottom: 10px;
+    border: none;
+    background: none;
+    border-bottom: 2px solid #007bff;
+    padding: 5px;
+    width: 100%;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+  
+  .comment-input-vac:focus,
+  .date-picker-vac:focus {
+    border-color: #0056b3;
+    outline: none;
+  }
+  
+  .action-buttons-vac button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    width: 48%; /* Изменим ширину кнопок на 48% для более равномерного размещения */
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    margin: 0 1%; /* Добавим небольшие отступы между кнопками */
+    font-size: 16px;
+  }
+  
+  .action-buttons-vac button:hover {
+    background-color: #0056b3;
+  }
+  
+  @media (max-width: 480px) {
+    .action-buttons-vac button {
+      width: 100%; /* Полная ширина кнопок на мобильных устройствах */
+    }
+  }
+  
