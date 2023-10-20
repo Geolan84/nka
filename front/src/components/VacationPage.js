@@ -88,7 +88,7 @@ const VacationPage = () => {
   const countSelectedDays = () => {
     if (startDate && endDate) {
       const diffTime = Math.abs(endDate - startDate);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const diffDays = Math.ceil((diffTime / (1000 * 60 * 60 * 24)) + 1);
       return diffDays;
     }
     return 0;

@@ -18,6 +18,10 @@ const UserProfile = () => {
         navigate("/vacation");
     };
 
+    const handleNavigateToMyPlan = () => {
+        navigate("/my-plan");
+    };
+
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
     };
@@ -72,7 +76,7 @@ const UserProfile = () => {
                 <h1 className="user-title">Личный кабинет</h1>
                 <button className="user-action" onClick={handleNavigateToStructure}>Перейти к структуре компании</button>
                 <button className="user-action" onClick={handleNavigateToVacation}>Запланировать отпуск</button>
-                <button className="user-action">Мой план</button>
+                <button className="user-action" onClick={handleNavigateToMyPlan}>Мой план</button>
                 <div className="graphic">
                     <button className="user-action" onClick={toggleDropdown}>График</button>
                     {showDropdown && (

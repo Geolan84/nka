@@ -7,7 +7,7 @@ import RegisterProf from "./components/RegisterProf";
 import CompanyStructure from "./components/CompanyStructure";
 import DepartmentForm from "./components/DepartmentForm";
 import VacationPage from "./components/VacationPage";
-
+import My_plan from "./components/My-plan";
 
 const App = () => {
   return (
@@ -20,6 +20,7 @@ const App = () => {
         <Route path="/structure" element={<CompanyStructure />} />
         <Route path="/structure/:departmentId" element={<DepartmentForm />} />
         <Route path="/vacation" element={<VacationPage />} />
+        <Route path="/my-plan" element={<My_plan />} />
       </Routes>
     </Router>
   );
