@@ -28,6 +28,11 @@ class ApplicationsRepository:
                 (
                 select
                     application_id,
+                    users.user_id,
+                    email,
+                    first_name,
+                    second_name,
+                    patronymic,
                     type_id,
                     note,
                     start_date,
