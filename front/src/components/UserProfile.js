@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../css/UserProfile.css";
 import logo from '../images/logo.svg';
+import VacationTypePage from "./VacationTypePage";
 
 const UserProfile = () => {
     const [user, setUser] = useState(null);
@@ -9,6 +10,25 @@ const UserProfile = () => {
     const user_id = localStorage.getItem("user_id");
     const role = localStorage.getItem("role");
     const [showDropdown, setShowDropdown] = useState(false);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isTypeModalOpen, setIsTypeModalOpen] = useState(false); // Добавляем новое состояние для модального окна "Иное отсутствие"
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOpenTypeModal = () => {
+        setIsTypeModalOpen(true); // Открывает модальное окно "Иное отсутствие"
+    };
+
+    const handleBackInProf = () => {
+        setIsModalOpen(false); // Закрыть модальное окно "Запланировать отпуск"
+    };
+
+    const handleBackInTypeProf = () => {
+        setIsTypeModalOpen(false); // Закрыть модальное окно "Иное отсутствие"
+    };
 
     const handleNavigateToStructure = () => {
         navigate("/structure");
@@ -30,7 +50,7 @@ const UserProfile = () => {
         const token = localStorage.getItem("token");
 
         if (!token) {
-            navigate("/login"); // Нет токена, перенаправляем пользователя на страницу входа
+            navigate("/login");
             return;
         }
         const fetchUserProfile = async () => {
@@ -57,11 +77,9 @@ const UserProfile = () => {
     }, []);
 
     const handleLogout = () => {
-        // Удаляем токен из localStorage
         localStorage.removeItem("token");
         localStorage.removeItem("user_id");
         localStorage.removeItem("role");
-        // Перенаправляем на главную страницу
         window.location.href = "/";
     };
 
@@ -69,13 +87,15 @@ const UserProfile = () => {
         <div>
         <div className="header0">
             <img src={logo} alt="Logo" />
+            <h1 className="user-title">Личный кабинет</h1>
             <button className="user-logout" onClick={handleLogout}>Выйти</button>
         </div>
+        
         <div className="user-profile">
             <div className="user-actions">
-                <h1 className="user-title">Личный кабинет</h1>
+                
                 <button className="user-action" onClick={handleNavigateToStructure}>Перейти к структуре компании</button>
-                <button className="user-action" onClick={handleNavigateToVacation}>Запланировать отпуск</button>
+                <button className="user-action" onClick={handleOpenModal}>Запланировать отпуск</button>
                 <button className="user-action" onClick={handleNavigateToMyPlan}>Мой план</button>
                 <div className="graphic">
                     <button className="user-action" onClick={toggleDropdown}>График</button>
@@ -86,14 +106,13 @@ const UserProfile = () => {
                         </div>
                     )}
                 </div>
-                <button className="user-action">Иное отсутствие</button>
+                <button className="user-action" onClick={handleOpenTypeModal}>Иное отсутствие</button> {/* Открывает модальное окно "Иное отсутствие" */}
                 <button className="user-action">Справочный центр</button>
             </div>
             <div className="user-info">
                 {user ? (
                     <>
-                        <p>Имя: {user.first_name}</p>
-                        <p>Фамилия: {user.second_name}</p>
+                        <p>{user.first_name} {user.second_name}</p>
                         <p>Отдел: </p>
                         <p>Email: {user.email}</p>
                         
@@ -103,6 +122,16 @@ const UserProfile = () => {
                 )}
             </div>
         </div>
+        {isModalOpen && (
+            <div className={`modal-overlay ${isModalOpen ? "active" : ""}`}>
+                <VacationTypePage onClose={handleBackInProf} /> {/* Передаем функцию onClose */}
+            </div>
+        )}
+        {isTypeModalOpen && (
+            <div className={`modal-overlay ${isTypeModalOpen ? "active" : ""}`}>
+                <VacationTypePage onClose={handleBackInTypeProf} /> {/* Передаем функцию onClose */}
+            </div>
+        )}
         </div>
     );
 };
