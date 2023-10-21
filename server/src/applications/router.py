@@ -25,15 +25,15 @@ async def test(token: HTTPAuthorizationCredentials = Security(bearer)):
     user_id = info.get('user_id')
     print(await ApplicationsRepository.get_head(user_id))
 
-@router.get("/get_statistic")
-async def get_statistic(token: HTTPAuthorizationCredentials = Security(bearer)):
-    info = read_token(token)
-    if info is None:
-        raise HTTPException(
-            status_code=401,
-            detail="Not authorized. Use /auth/login endpoint."
-        )
-    user_id = info.get('user_id')
+# @router.get("/get_statistic")
+# async def get_statistic(token: HTTPAuthorizationCredentials = Security(bearer)):
+#     info = read_token(token)
+#     if info is None:
+#         raise HTTPException(
+#             status_code=401,
+#             detail="Not authorized. Use /auth/login endpoint."
+#         )
+#     user_id = info.get('user_id')
     
 @router.get("/get_apps", status_code=200)
 async def get_applications(token: HTTPAuthorizationCredentials = Security(bearer)):

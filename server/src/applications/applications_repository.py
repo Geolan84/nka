@@ -5,23 +5,59 @@ from datetime import datetime
 
 class ApplicationsRepository:
 
-    # @staticmethod
-    # async def get_statistic(user: dict):
-    #     try:
-    #         connection = await asyncpg.connect(DATABASE_URL)
-
-    #     except Exception as e:
-    #         print(e)
-    #     finally:
-    #         await connection.close()
+    @staticmethod
+    async def change_status(app_id: int, status_id: int):
+        try:
+            connection = await asyncpg.connect(DATABASE_URL)
+            connection.execute("insert into status_log values(default, $1, $2, $3);",
+                               app_id, status_id, datetime.now())
+        except Exception as e:
+            return str(e)
+        finally:
+            await connection.close()
 
     @staticmethod
     async def get_active_apps(head_id: int):
         try:
             connection = await asyncpg.connect(DATABASE_URL)
             department_id = await connection.fetchval("select department_id from users where user_id = $1;", head_id)
-            apps = await connection.fetch("select * from users join applications using(user_id) join status_log using(application_id) where department_id = 1 and status_id = 1;")
-            #await connection.fetch()
+            apps = await connection.fetch("""
+            select
+                *
+            from
+                (
+                select
+                    application_id,
+                    status_id,
+                    moment,
+                    verifier_id,
+                    role_id,
+                    case
+                        role_id
+                    when 1 then department_id
+                        when 2 then head_department_id
+                        else department_id
+                    end as next_dep_verify
+                from
+                    (
+                    select
+                        max(record_id) as record_id
+                    from
+                        status_log
+                    group by
+                        application_id) as actual
+                join status_log
+                        using(record_id)
+                join users on
+                    status_log.verifier_id = users.user_id
+                join users_role
+                        using(user_id)
+                join department
+                        using(department_id)
+            ) as next_level
+            where
+                next_dep_verify = $1;""", department_id)
+            return {"apps": [] if apps is None else [dict(x) for x in apps]}
         except Exception as e:
             print(e)
         finally:
@@ -67,8 +103,8 @@ class ApplicationsRepository:
             connection = await asyncpg.connect(DATABASE_URL)
             async with connection.transaction():
                 new_form_id = await connection.fetchval('insert into applications values(default, $1, $2, $3, $4, $5) returning application_id;', new_form.get('type'), user_id, new_form.get('note'), new_form.get('start_date'), new_form.get('end_date'))
-                await connection.execute('insert into status_log values(default, $1, $2, $3);', new_form_id,
-                                         ApplicationStatus.PROCESSING if new_form.get('type')==1 else ApplicationStatus.ACCESSED, datetime.now())
+                await connection.execute('insert into status_log values(default, $1, $2, $3, $4);', new_form_id,
+                                         ApplicationStatus.PROCESSING if new_form.get('type')==1 else ApplicationStatus.ACCESSED, datetime.now(), user_id)
         except Exception as e:
             print(e)
             return str(e)
