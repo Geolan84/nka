@@ -28,6 +28,10 @@ class ApplicationsRepository:
                 (
                 select
                     application_id,
+                    type_id,
+                    note,
+                    start_date,
+                    end_date,
                     status_id,
                     moment,
                     verifier_id,
