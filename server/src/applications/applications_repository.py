@@ -58,6 +58,8 @@ class ApplicationsRepository:
                         using(user_id)
                 join department
                         using(department_id)
+                join applications
+			            using(application_id)
             ) as next_level
             where
                 next_dep_verify = $1;""", department_id)
