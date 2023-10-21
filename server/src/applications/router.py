@@ -83,13 +83,14 @@ async def change_status(app_id: int, status_id: int, token: HTTPAuthorizationCre
             status_code=401,
             detail="Not authorized. Use /auth/login endpoint."
         )
+    user_id = info.get('user_id')
     role = info.get('role')
     if role is None or role < 2:
         raise HTTPException(
             status_code=403,
             detail="Forbidden. You are not head or admin."
         )
-    change_error = await ApplicationsRepository.change_status(app_id, status_id)
+    change_error = await ApplicationsRepository.change_status(app_id, status_id, user_id)
     if change_error is not None:
         raise HTTPException(
             status_code=400,
