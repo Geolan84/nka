@@ -9,7 +9,7 @@ class ApplicationsRepository:
     async def change_status(app_id: int, status_id: int, user_id: int):
         try:
             connection = await asyncpg.connect(DATABASE_URL)
-            connection.execute("insert into status_log values(default, $1, $2, $3, $4);",
+            await connection.execute("insert into status_log values(default, $1, $2, $3, $4);",
                                app_id, status_id, datetime.now(), user_id)
         except Exception as e:
             return str(e)
