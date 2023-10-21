@@ -82,7 +82,7 @@ class StructRepository:
     async def get_user(user_id: int):
         try:
             connection = await asyncpg.connect(DATABASE_URL)
-            user = await connection.fetchrow('select user_id, email, first_name, second_name, patronymic, department_id from users where user_id=$1;', user_id)
+            user = await connection.fetchrow('select user_id, email, first_name, second_name, patronymic, department_id, role_id from users join users_role using(user_id) where user_id=$1;', user_id)
             return dict(user)
         except Exception as e:
             print(e)
