@@ -52,7 +52,7 @@ async def get_applications(token: HTTPAuthorizationCredentials = Security(bearer
         )
     return answer
 
-@router.get("get_active_apps", status_code=200)
+@router.get("/get_active_apps", status_code=200)
 async def get_active_apps(token: HTTPAuthorizationCredentials = Security(bearer)):
     info = read_token(token)
     if info is None:
