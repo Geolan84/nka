@@ -82,7 +82,7 @@ const HomePage = () => {
                 </div>
             </div>
             <div className="centered-p-home">
-                <p className="p-home">Copyrights 2023 &copy; yenka.ru</p>
+                <p className="p-home">Copyrights 2023 &copy; nka.ru</p>
             </div>
         </div>
     );

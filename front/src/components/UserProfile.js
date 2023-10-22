@@ -14,22 +14,22 @@ const UserProfile = () => {
     const [showDropdown, setShowDropdown] = useState(false);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isTypeModalOpen, setIsTypeModalOpen] = useState(false); // Добавляем новое состояние для модального окна "Иное отсутствие"
+    const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
 
     const handleOpenTypeModal = () => {
-        setIsTypeModalOpen(true); // Открывает модальное окно "Иное отсутствие"
+        setIsTypeModalOpen(true);
     };
 
     const handleBackInProf = () => {
-        setIsModalOpen(false); // Закрыть модальное окно "Запланировать отпуск"
+        setIsModalOpen(false);
     };
 
     const handleBackInTypeProf = () => {
-        setIsTypeModalOpen(false); // Закрыть модальное окно "Иное отсутствие"
+        setIsTypeModalOpen(false);
     };
 
     const handleNavigateToStructure = () => {
@@ -59,6 +59,7 @@ const UserProfile = () => {
             navigate("/login");
             return;
         }
+
         const fetchUserProfile = async () => {
             try {
                 const response = await fetch(`http://localhost:8080/struct/get_user?user_id=${user_id}`, {
@@ -91,59 +92,63 @@ const UserProfile = () => {
 
     return (
         <div>
-        <div className="header0">
-            <img src={logo} alt="Logo" />
-            <h1 className="user-title">Личный кабинет</h1>
-            <button className="user-logout" onClick={handleLogout}>Выйти</button>
-        </div>
-        
-        <div className="user-profile">
-            <div className="user-actions">
-                
-                <button className="user-action" onClick={handleNavigateToStructure}>Перейти к структуре компании</button>
-                <button className="user-action" onClick={handleOpenModal}>Запланировать отпуск</button>
-                <button className="user-action" onClick={handleNavigateToMyPlan}>Мой план</button>
-                <button className="user-action">График</button>
+            <div className="header0">
+                <img src={logo} alt="Logo" />
+                <h1 className="user-title">Личный кабинет</h1>
+                <button className="user-logout" onClick={handleLogout}>Выйти</button>
+            </div>
 
-                <button className="user-action" onClick={handleOpenTypeModal}>Иное отсутствие</button>
-                {role === "2" && (
+            <div className="user-profile">
+                <div className="user-actions">
+                    <button className="user-action" onClick={handleNavigateToStructure}>Перейти к структуре компании</button>
+                    <button className="user-action" onClick={handleOpenModal}>Запланировать отпуск</button>
+                    <button className="user-action" onClick={handleNavigateToMyPlan}>Мой план</button>
+                    <button className="user-action">График</button>
+
+                    <button className="user-action" onClick={handleOpenTypeModal}>Иное отсутствие</button>
+
+                    {role === "2" && (
                         <button className="user-action" onClick={handleNavigateToApprove}>Подтвердить отпуска</button>
                     )}
-                <button className="user-action">Справочный центр</button>
-            </div>
-            <div className="user-profile-2">
-                <div className="user-info">
-                    <div className="user-avatar">
-                        <img src={avatar} alt="Avatar" />
+
+                    <button className="user-action">Справочный центр</button>
+                </div>
+
+                <div className="user-profile-2">
+                    <div className="user-info">
+                        <div className="user-avatar">
+                            <img src={avatar} alt="Avatar" />
+                        </div>
+                        <div className="user-details">
+                            {user ? (
+                                <>
+                                    <p>{user.first_name} {user.second_name} {user.patronymic}</p>
+                                    <p>Отдел: {user.department_name}</p>
+                                    <p>Email: {user.email}</p>
+                                    <p>Роль: {role === "1" ? "Сотрудник" : role === "2" ? "Начальник" : role === "3" ? "Администратор" : "Неизвестно"}</p>
+                                </>
+                            ) : (
+                                <p>Информация о пользователе не найдена</p>
+                            )}
+                        </div>
                     </div>
-                    <div className="user-details">
-                        {user ? (
-                            <>
-                                <p>{user.first_name} {user.second_name} {user.patronymic}</p>
-                                <p>Отдел: {user.department}</p>
-                                <p>Email: {user.email}</p>
-                                <p>Роль: {user.role_id}</p>
-                            </>
-                        ) : (
-                            <p>Информация о пользователе не найдена</p>
-                        )}
+                    <div className="user-actions">
+                        {/* Your user actions buttons */}
                     </div>
                 </div>
-                <div className="user-actions">
-                    {/* Your user actions buttons */}
+            </div>
+
+            {isModalOpen && (
+                <div className={`modal-overlay ${isModalOpen ? "active" : ""}`}>
+                    <VacationPage onClose={handleBackInProf} />
                 </div>
-            </div>
-        </div>
-        {isModalOpen && (
-            <div className={`modal-overlay ${isModalOpen ? "active" : ""}`}>
-                <VacationPage onClose={handleBackInProf} /> {/* Передаем функцию onClose */}
-            </div>
-        )}
-        {isTypeModalOpen && (
-            <div className={`modal-overlay ${isTypeModalOpen ? "active" : ""}`}>
-                <VacationTypePage onClose={handleBackInTypeProf} /> {/* Передаем функцию onClose */}
-            </div>
-        )}
+            )}
+
+            {isTypeModalOpen && (
+                <div className={`modal-overlay ${isTypeModalOpen ? "active" : ""}`}>
+                    <VacationTypePage onClose={handleBackInTypeProf} />
+                </div>
+            )}
         </div>
     );
 };

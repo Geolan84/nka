@@ -110,36 +110,43 @@ const VacationPage = ({ onClose }) => {
       <div className="count-days-vac">
         Выбрано {countSelectedDays()} дней отпуска
       </div>
-      <label className="comment-label-vac">Комментарий:</label>
-      <input
-        type="text"
-        value={comment}
-        onChange={handleCommentChange}
-        className="comment-input-vac"
-      />
-      <label className="date-label-vac">Дата начала:</label>
-      <DatePicker
-        selected={startDate}
-        onChange={handleStartDateChange}
-        selectsStart
-        startDate={startDate}
-        endDate={endDate}
-        locale="ru"
-        dateFormat="yyyy-MM-dd"
-        className="date-picker-vac"
-      />
-      <label className="date-label-vac">Дата окончания:</label>
-      <DatePicker
-        selected={endDate}
-        onChange={handleEndDateChange}
-        selectsEnd
-        startDate={startDate}
-        endDate={endDate}
-        minDate={startDate}
-        locale="ru"
-        dateFormat="yyyy-MM-dd"
-        className="date-picker-vac"
-      />
+      <div className="comment-container">
+        <label className="comment-label-vac">Комментарий:</label>
+        <input
+          type="text"
+          value={comment}
+          onChange={handleCommentChange}
+          className="comment-input-vac"
+        />
+      </div>
+      <div className="date-container">
+        <label className="date-label-vac">Дата начала:</label>
+        <DatePicker
+          selected={startDate}
+          onChange={handleStartDateChange}
+          selectsStart
+          startDate={startDate}
+          endDate={endDate}
+          locale="ru"
+          dateFormat="yyyy-MM-dd"
+          className="date-picker-vac"
+        />
+      </div>
+              
+      <div className="date-container">
+        <label className="date-label-vac">Дата окончания:</label>
+        <DatePicker
+          selected={endDate}
+          onChange={handleEndDateChange}
+          selectsEnd
+          startDate={startDate}
+          endDate={endDate}
+          minDate={startDate}
+          locale="ru"
+          dateFormat="yyyy-MM-dd"
+          className="date-picker-vac"
+        />
+      </div>
       <div className="action-buttons-vac">
         <button onClick={handleSendVacationRequest}>Отправить заявку на отпуск</button>
         <button onClick={handleBackInProf}>Назад в профиль</button> {/* Вызываем функцию при нажатии на кнопку */}

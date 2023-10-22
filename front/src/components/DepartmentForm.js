@@ -59,8 +59,7 @@ const DepartmentForm = () => {
             <ul>
                 {users.map((user) => (
                     <li key={user.user_id}>
-                        {user.first_name} {user.second_name} {user.patronymic} ({user.email})
-                        {user.is_head && " - Начальник"}
+                        {user.first_name} {user.second_name} {user.patronymic} ({user.email}) {user.role_id === 1 ? "Сотрудник" : user.role_id === 2 ? "Начальник" : user.role_id === 3 ? "Администратор" : "Неизвестно"}
                     </li>
                 ))}
             </ul>

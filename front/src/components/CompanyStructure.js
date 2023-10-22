@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Импортируйте Link из react-router-dom
+import { useNavigate } from "react-router-dom";
 import "../css/CompanyStructure.css";
 import logo from '../images/logo.svg';
 
 const CompanyStructure = () => {
     const [divisions, setDivisions] = useState([]);
-    const [newDivision, setNewDivision] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
-    const fetchDivisions = () => {
-        fetch("http://localhost:8080/struct/get_department")
+    const fetchAllDivisions = (token) => {
+        fetch("http://localhost:8080/struct/get_all_departments", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
             .then((response) => response.json())
             .then((data) => {
-                if (data.department_name) {
+                if (data) {
                     setDivisions([data]);
                 }
             })
@@ -23,48 +26,70 @@ const CompanyStructure = () => {
     };
 
     useEffect(() => {
-        fetchDivisions();
+        const token = localStorage.getItem("token");
+        fetchAllDivisions(token);
     }, []);
-
-    const addDivision = () => {
-        fetch(`http://localhost:8080/struct/new_department?department_name=${newDivision}`, {
-            method: "POST",
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    setIsModalOpen(false);
-                    fetchDivisions();
-                }
-            })
-            .catch((error) => {
-                console.error("Ошибка при создании подразделения:", error);
-            });
-
-        setNewDivision("");
-    };
 
     const handleBackInProf = () => {
         window.location.href = "/profile";
     };
 
-    const handleDepartmentClick = (departmentId) => {
-        navigate(`/structure/dep=${departmentId}`);
+    const toggleDepartment = (departmentId) => {
+        setDivisions((prevState) => {
+            const updatedDivisions = toggleDepartmentVisibility(prevState, departmentId);
+            return [...updatedDivisions];
+        });
     };
 
-    const renderDepartments = (departments) => {
+    const toggleDepartmentVisibility = (departments, departmentId) => {
+        return departments.map((department) => {
+            if (department.department_id === departmentId) {
+                return { ...department, isExpanded: !department.isExpanded };
+            } else if (department.departments) {
+                return {
+                    ...department,
+                    departments: toggleDepartmentVisibility(department.departments, departmentId),
+                };
+            }
+            return department;
+        });
+    };
+
+    const renderDepartments = (departments, level = 0) => {
         return (
-            <ul className="">
+            <ul className="tree">
                 {departments.map((department) => (
                     <li key={department.department_id}>
-                        <span
-                            onClick={() => handleDepartmentClick(department.department_id)}
-                            style={{ cursor: "pointer" }}
-                        >
-                            {department.department_name}
-                        </span>
-                        {department.departments && department.departments.length > 0 && (
-                            renderDepartments(department.departments)
+                        <div className="tree-item">
+                        <input
+                            type="checkbox"
+                            id={`c${department.department_id}`}
+                            checked={department.isExpanded || false} // Ensure it's controlled
+                            onChange={() => toggleDepartment(department.department_id)}
+                        />
+                            <label className="tree_label" htmlFor={`c${department.department_id}`}>
+                                <span className="department-name">{department.department_name}</span>
+                                <div className="tree_buttons">
+                                    {level > 0 && department.isExpanded && (
+                                        <button onClick={() => handleRenameDepartment(department.department_id)}>
+                                            Изменить
+                                        </button>
+                                    )}
+                                    {level > 0 && department.isExpanded && (
+                                        <button onClick={() => handleDeleteDepartment(department.department_id)}>
+                                            Удалить
+                                        </button>
+                                    )}
+                                    {department.isExpanded && (
+                                        <button onClick={() => handleDepartmentClick(department.department_id)}>
+                                            Перейти в отдел
+                                        </button>
+                                    )}
+                                </div>
+                            </label>
+                        </div>
+                        {department.departments && department.isExpanded && department.departments.length > 0 && (
+                            renderDepartments(department.departments, level + 1)
                         )}
                     </li>
                 ))}
@@ -72,16 +97,30 @@ const CompanyStructure = () => {
         );
     };
 
+    const handleRenameDepartment = (departmentId) => {
+        // Обработка переименования отдела
+    };
+
+    const handleDeleteDepartment = (departmentId) => {
+        // Обработка удаления отдела
+    };
+
+    const handleDepartmentClick = (departmentId) => {
+        navigate(`/structure/dep=${departmentId}`);
+    };
+
     return (
         <div>
             <div className="header0">
-            <img onClick={handleBackInProf} src={logo} alt="Logo" />
-            <h1 className="user-title">Структура компании</h1>
-            <button className="user-logout" onClick={handleBackInProf}>Назад в профиль</button>
-        </div>
-            <div>
+                <img onClick={handleBackInProf} src={logo} alt="Logo" />
+                <h1 className="user-title">Структура компании</h1>
+                <button className="user-logout" onClick={handleBackInProf}>
+                    Назад в профиль
+                </button>
+            </div>
+            <div className="FormDep">
                 <h2>Существующие отделы:</h2>
-                {renderDepartments(divisions)}
+                {divisions.length > 0 && renderDepartments(divisions)}
             </div>
         </div>
     );

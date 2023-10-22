@@ -10,6 +10,7 @@ const RegisterProf = () => {
   const [key, setKey] = useState("");
   const [firstName, setFirstName] = useState("");
   const [secondName, setSecondName] = useState("");
+  const [patronymic, setPatronymic] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [error, setError] = useState(""); // Добавляем состояние для ошибки
 
@@ -23,6 +24,7 @@ const RegisterProf = () => {
         password: password,
         first_name: firstName,
         second_name: secondName,
+        patronymic: patronymic,
       }),
     };
 
@@ -32,7 +34,11 @@ const RegisterProf = () => {
 
       if (response.ok) {
         const token = data.token;
+        const user_id = data.user_id;
+        const role = data.role;
         localStorage.setItem("token", token);
+        localStorage.setItem("user_id", user_id);
+        localStorage.setItem("role", role);
         navigate("/profile");
       } else if (response.status === 400) {
         setError("Ошибка лицензионного ключа");
@@ -103,6 +109,19 @@ const RegisterProf = () => {
             </div>
           </div>
           <div className="field">
+            <label className="register-label">Фамилия</label>
+            <div className="control">
+              <input
+                type="text"
+                placeholder="Введите свою фамилию"
+                value={secondName}
+                onChange={(e) => setSecondName(e.target.value)}
+                className="register-input"
+                required
+              />
+            </div>
+          </div>
+          <div className="field">
             <label className="register-label">Имя</label>
             <div className="control">
               <input
@@ -116,15 +135,14 @@ const RegisterProf = () => {
             </div>
           </div>
           <div className="field">
-            <label className="register-label">Фамилия</label>
+            <label className="register-label">Отчество</label>
             <div className="control">
               <input
                 type="text"
-                placeholder="Введите свою фамилию"
-                value={secondName}
-                onChange={(e) => setSecondName(e.target.value)}
+                placeholder="Введите своё отчество"
+                value={patronymic}
+                onChange={(e) => setPatronymic(e.target.value)}
                 className="register-input"
-                required
               />
             </div>
           </div>
