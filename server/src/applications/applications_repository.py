@@ -67,7 +67,7 @@ class ApplicationsRepository:
 			            using(application_id)
             ) as next_level
             where
-                next_dep_verify = $1;""", department_id)
+                status_id = 1 and next_dep_verify = $1;""", department_id)
             return {"apps": [] if apps is None else [dict(x) for x in apps]}
         except Exception as e:
             print(e)
