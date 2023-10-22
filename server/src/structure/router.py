@@ -1,5 +1,7 @@
-from fastapi import APIRouter, Path, status, Depends, HTTPException
+from fastapi import APIRouter, Security, HTTPException
 from fastapi.responses import Response
+from fastapi.security import HTTPAuthorizationCredentials
+from token_manager import bearer, read_token
 
 from structure.struct_repository import StructRepository as struct
 from structure.schemas import NewUser, PatchUser
@@ -25,8 +27,28 @@ async def edit_department(new_name: str, department_id: int):
         raise HTTPException(status_code=400, detail=department_error)
     
 
+@router.get("/get_all_departments", status_code=200)
+async def get_all_departments(token: HTTPAuthorizationCredentials = Security(bearer)):
+    info = read_token(token)
+    if info is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authorized. Use /auth/login endpoint."
+        )
+    role = info.get('role')
+    if role is None or role < 2:
+        raise HTTPException(
+            status_code=403,
+            detail="Forbidden. You are not head or admin."
+        )
+    try:
+        res = await struct.get_all_departments()
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
 @router.get("/get_department", status_code=200)
-async def get_structure(department_id: int | None = None):
+async def get_department(department_id: int | None = None):
     try:
         res = await struct.get_department(department_id)
         return res
