@@ -34,6 +34,12 @@
     text-decoration: underline;
   }
   
+  .error-message {
+    color: red;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
   .login-container {
     width: 300px;
     max-height: 215px;
@@ -74,8 +80,8 @@
     outline: none;
   }
   
-  .login-button {
-    background-color: #57C2FF;
+  .login-button-2 {
+    background-color: #459acc;
     color: #fff;
     border: none;
     padding: 10px;
@@ -86,7 +92,7 @@
     font-size: 25px;
   }
   
-  .login-button:hover {
+  .login-button-2:hover {
     background-color: #57C2FF;
   }
   

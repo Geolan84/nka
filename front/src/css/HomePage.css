@@ -46,6 +46,7 @@
   color: #FFFFFF;
   font-family: Roboto;
   margin-top: 50px;
+  padding: 20px;
 }
 
 .header1 {
@@ -65,7 +66,8 @@
   background: #FFFFFF;
   height: 550px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
 }
 .gray {
   color: #242424;
@@ -102,13 +104,15 @@
 .p-home {
   font-size: 18px;
   margin-bottom: 30px;
-    font-family: Roboto;
+  font-family: Roboto;
+  align-items: center;
 }
 
 .a-home {
   text-decoration: none;
   font-size: 24px;
   color: #FFFFFF;
+  cursor: pointer;
   transition: color 0.3s;
 }
 
@@ -117,7 +121,6 @@
   margin: 0;
   padding: 0
 }
-
 
 .Top_Menu{
   margin-right: 25px;
@@ -190,8 +193,8 @@
   justify-content: center;
   align-items: center;
   margin-left: 25px;
-  margin-inside: center;
   }
+
   .photo_container {
       margin-top: 5px;
       display: flex;
@@ -226,14 +229,30 @@
   }
 
   .block {
-    background: #242424;
-    width: 200px;
-    height: 65px;
+    background: #464545;
+    width: 250px;
+    height: 70px;
     border-radius: 20px;
     margin: auto;
     font-family: Roboto;
-    font-size: 20px;
-    color: #FFFFFF;
-    margin-inside: center;
+    font-size: 25px;
+    color: #FFFFFF; /* Задаем белый цвет текста */
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+  
+  .centered-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .centered-p-home {
+    text-align: center;
+    margin-top: 20px; /* Добавьте нужный отступ сверху */
   }
   

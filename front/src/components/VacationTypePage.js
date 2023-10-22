@@ -105,7 +105,7 @@ const VacationTypePage = ({ onClose }) => {
   return (
     <div className="container-vac-type">
       <div className="header-vac-type">
-        <h1>Планирование отпуска</h1>
+        <h1>Иное отсутствие</h1>
       </div>
       <div className="user-info-vac-type">
         {user ? (
@@ -125,7 +125,6 @@ const VacationTypePage = ({ onClose }) => {
         onChange={handleVacationTypeChange}
         className="vacation-type-select"
       >
-        <option value={1}>Основной отпуск</option>
         <option value={2}>Дополнительный оплачиваемый отпуск</option>
         <option value={3}>Отпуск без сохранения з/п</option>
         <option value={4}>Отпуск по уходу за ребёнком</option>

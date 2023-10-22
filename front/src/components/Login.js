@@ -8,6 +8,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [, setErrorMessage] = useState("");
+  const [error, setError] = useState(""); // Добавляем состояние для ошибки
 
   const submitLogin = async () => {
     const requestOption = {
@@ -31,6 +32,8 @@ const Login = () => {
         localStorage.setItem("user_id", user_id);
         localStorage.setItem("role", role);
         navigate("/profile");
+      } else if (response.status === 400) {
+        setError("Ошибка логина или пароля");
       } else {
         setErrorMessage(data.msg);
       }
@@ -52,10 +55,13 @@ const Login = () => {
     <div>
       <div className="header0">
         <img src={logo} alt="Logo" />
-        <button className="login-button" onClick={handleReturn}>Вернуться</button>
+        <button onClick={handleReturn}>
+          Вернуться
+        </button>
       </div>
       <div className="login-container">
         <h1 className="login-title">Вход</h1>
+        {error && <div className="error-message">{error}</div>}
         <form className="login-form" onSubmit={handleSubmit}>
           <input
             type="email"
@@ -73,7 +79,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit" className="login-button">
+          <button type="submit" className="login-button-2">
             Войти
           </button>
         </form>

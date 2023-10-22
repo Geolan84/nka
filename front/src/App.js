@@ -8,6 +8,7 @@ import CompanyStructure from "./components/CompanyStructure";
 import DepartmentForm from "./components/DepartmentForm";
 import VacationPage from "./components/VacationPage";
 import My_plan from "./components/My-plan";
+import Approve from "./components/Approve";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/structure/:departmentId" element={<DepartmentForm />} />
         <Route path="/vacation" element={<VacationPage />} />
         <Route path="/my-plan" element={<My_plan />} />
+        <Route path="/approve" element={<Approve />} />
       </Routes>
     </Router>
   );

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/UserProfile.css";
 import logo from '../images/logo.svg';
+import avatar from '../images/avatar.jpg';
 import VacationTypePage from "./VacationTypePage";
+import VacationPage from "./VacationPage";
 
 const UserProfile = () => {
     const [user, setUser] = useState(null);
@@ -44,6 +46,10 @@ const UserProfile = () => {
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
+    };
+
+    const handleNavigateToApprove = () => {
+        navigate("/approve");
     };
 
     useEffect(() => {
@@ -97,34 +103,40 @@ const UserProfile = () => {
                 <button className="user-action" onClick={handleNavigateToStructure}>Перейти к структуре компании</button>
                 <button className="user-action" onClick={handleOpenModal}>Запланировать отпуск</button>
                 <button className="user-action" onClick={handleNavigateToMyPlan}>Мой план</button>
-                <div className="graphic">
-                    <button className="user-action" onClick={toggleDropdown}>График</button>
-                    {showDropdown && (
-                        <div className="dropdown">
-                            <button className="user-action">Сектор</button>
-                            <button className="user-action">Отдел</button>
-                        </div>
+                <button className="user-action">График</button>
+
+                <button className="user-action" onClick={handleOpenTypeModal}>Иное отсутствие</button>
+                {role === "2" && (
+                        <button className="user-action" onClick={handleNavigateToApprove}>Подтвердить отпуска</button>
                     )}
-                </div>
-                <button className="user-action" onClick={handleOpenTypeModal}>Иное отсутствие</button> {/* Открывает модальное окно "Иное отсутствие" */}
                 <button className="user-action">Справочный центр</button>
             </div>
-            <div className="user-info">
-                {user ? (
-                    <>
-                        <p>{user.first_name} {user.second_name}</p>
-                        <p>Отдел: </p>
-                        <p>Email: {user.email}</p>
-                        
-                    </>
-                ) : (
-                    <p>Информация о пользователе не найдена</p>
-                )}
+            <div className="user-profile-2">
+                <div className="user-info">
+                    <div className="user-avatar">
+                        <img src={avatar} alt="Avatar" />
+                    </div>
+                    <div className="user-details">
+                        {user ? (
+                            <>
+                                <p>{user.first_name} {user.second_name} {user.patronymic}</p>
+                                <p>Отдел: {user.department}</p>
+                                <p>Email: {user.email}</p>
+                                <p>Роль: {user.role_id}</p>
+                            </>
+                        ) : (
+                            <p>Информация о пользователе не найдена</p>
+                        )}
+                    </div>
+                </div>
+                <div className="user-actions">
+                    {/* Your user actions buttons */}
+                </div>
             </div>
         </div>
         {isModalOpen && (
             <div className={`modal-overlay ${isModalOpen ? "active" : ""}`}>
-                <VacationTypePage onClose={handleBackInProf} /> {/* Передаем функцию onClose */}
+                <VacationPage onClose={handleBackInProf} /> {/* Передаем функцию onClose */}
             </div>
         )}
         {isTypeModalOpen && (

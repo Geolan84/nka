@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import "../css/CompanyStructure.css";
+import logo from '../images/logo.svg';
 
 const DepartmentForm = () => {
     const navigate = useNavigate(); // Добавляем импорт useNavigate
@@ -14,6 +15,7 @@ const DepartmentForm = () => {
         email: "",
         first_name: "",
         second_name: "",
+        patronymic_name: "",
         is_head: false,
     });
 
@@ -57,7 +59,7 @@ const DepartmentForm = () => {
             <ul>
                 {users.map((user) => (
                     <li key={user.user_id}>
-                        {user.first_name} {user.second_name} ({user.email})
+                        {user.first_name} {user.second_name} {user.patronymic} ({user.email})
                         {user.is_head && " - Начальник"}
                     </li>
                 ))}
@@ -113,18 +115,28 @@ const DepartmentForm = () => {
             email: "",
             first_name: "",
             second_name: "",
+            patronymic: "",
             is_head: false,
         });
     };
 
-    const handleBackInProf = () => {
+    const handleBackInStruct = () => {
         navigate(`/structure`);
     };
 
+    const handleBackInProf = () => {
+        navigate(`/profile`);
+    };
+
     return (
+
         <div>
+            <div className="header0">
+                <img onClick={handleBackInProf} src={logo} alt="Logo" />
+                <button className="user-logout" onClick={handleBackInProf}>Назад в профиль</button>
+            </div>
             <h1>Подразделение {departmentData.department_name}</h1>
-            <button onClick={handleBackInProf}>Назад к структуре компании</button>
+            <button onClick={handleBackInStruct}>Назад к структуре компании</button>
             <button onClick={() => setIsModalOpen(true)}>Добавить звено</button>
             <button onClick={() => setIsAddingUser(true)}>Добавить сотрудника</button>
 
@@ -170,6 +182,12 @@ const DepartmentForm = () => {
                                 placeholder="Фамилия"
                                 value={newUser.second_name}
                                 onChange={(e) => setNewUser({ ...newUser, second_name: e.target.value })}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Отчество"
+                                value={newUser.patronymic}
+                                onChange={(e) => setNewUser({ ...newUser, patronymic: e.target.value })}
                             />
                             <label>
                                 <input

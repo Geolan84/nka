@@ -37,22 +37,12 @@
     padding: 20px; /* Если нужен отступ, можете оставить */
 }
 
-.user-actions {
-    flex: 0.25;
-    text-align: left;
-    border-right: 1px solid #ccc; /* Добавляем правую границу */
-    padding-right: 20px; /* Добавляем отступ справа */
-}
-
 .user-title {
     font-size: 45px;
     margin-bottom: 15px;
     text-align: center; /* Добавляем отступ снизу */
 }
 
-.graphic {
-    flex: 1; /* Добавим стили для graphic, чтобы уменьшить его размер */
-}
 
 
 .user-action {
@@ -75,20 +65,6 @@
     background-color: #0056b3;
 }
 
-.graphic .dropdown button {
-    display: block;
-    margin: 10px 0 0 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    width: 250px;
-    height: 70px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    border-radius: 5px;
-    text-align: center;
-}
-
 .graphic .dropdown button:hover {
     background-color: #0056b3;
 }
@@ -97,11 +73,44 @@
     background-color: #0056b3;
 }
 
-.user-info {
-    flex: 1;
-    text-align: center;
+.user-profile {
+    display: flex;
+    justify-content: flex-start;
+    background-color: #f5f5f5;
+    padding: 20px; /* If needed */
 }
 
-.user-info p {
-    font-size: 25px;
+.user-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 50px;
+}
+
+.user-avatar {
+    margin-right: 20px;
+}
+
+.user-avatar img {
+    width: 250px;
+    height: 250px;
+    border-radius: 30%;
+}
+
+.user-details {
+    text-align: left;
+    font-size: 20px;
+}
+
+.user-details p {
+    margin: 15px 5px;
+}
+
+.user-actions {
+    flex: 0.25;
+    text-align: left;
+    border-right: 1px solid #ccc;
+    padding-right: 20px;
+    margin-right: 0; /* Remove right margin to eliminate the space */
 }

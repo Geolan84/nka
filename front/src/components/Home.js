@@ -1,17 +1,24 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import "../css/HomePage.css";
 import logo from '../images/logo.svg';
 import point from '../images/point.svg';
 
 const HomePage = () => {
+    const navigate = useNavigate();
+    const handleNavigateToLogin = () => {
+        navigate("/login");
+    };
+    const handleNavigateToRegister = () => {
+        navigate("/register");
+    };
     return (
         <div>
             <div className="header0">
         <img src={logo} alt="Logo" />
         <div>
-        <Link to="/login"><button className="login-button">Для сотрудника</button></Link>
-        <Link to="/register"><button className="login-button">Для работодателя</button></Link>
+            <button className="login-button" onClick={handleNavigateToLogin}>Для сотрудника</button>
+            <button className="login-button" onClick={handleNavigateToRegister}>Для работодателя</button>
         </div>
       </div>
       
@@ -23,7 +30,7 @@ const HomePage = () => {
                 </h3>
                 <div className="block">
                     <div className="h3-b-home">
-                        <a className="a-home"><Link to="/register">Начать планировать</Link></a>
+                        <a className="a-home" onClick={handleNavigateToLogin}>Начать планировать</a>
                     </div>
                 </div>
             </div>
@@ -38,6 +45,7 @@ const HomePage = () => {
             <div className="gray">
                 <h1>Этот сервис подходит Вам, если:</h1>
             </div>
+            <div className="centered-image-container">
             <div className="image-container">
                 <div className="photo_container">
                     <div className="image">
@@ -71,9 +79,11 @@ const HomePage = () => {
                         Вам нужна большая гибкость и прозрачность в планировании отпусков.
                     </div>
                 </div>
+                </div>
             </div>
-
-            <p className="p-home">Copyrights 2023 &copy; yenka.ru</p>
+            <div className="centered-p-home">
+                <p className="p-home">Copyrights 2023 &copy; yenka.ru</p>
+            </div>
         </div>
     );
 };

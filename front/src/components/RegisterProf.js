@@ -11,6 +11,7 @@ const RegisterProf = () => {
   const [firstName, setFirstName] = useState("");
   const [secondName, setSecondName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [error, setError] = useState(""); // Добавляем состояние для ошибки
 
   const submitRegistration = async () => {
     const requestOption = {
@@ -33,6 +34,8 @@ const RegisterProf = () => {
         const token = data.token;
         localStorage.setItem("token", token);
         navigate("/profile");
+      } else if (response.status === 400) {
+        setError("Ошибка лицензионного ключа");
       } else {
         setErrorMessage(data.msg);
       }
@@ -59,6 +62,7 @@ const RegisterProf = () => {
       <div className="register-container">
         <form className="box register-form" onSubmit={handleSubmit}>
           <h1 className="register-title">Регистрация</h1>
+          {error && <div className="error-message">{error}</div>}
           <div className="field">
             <label className="register-label">Почта</label>
             <div className="control">
