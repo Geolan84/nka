@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/UserProfile.css";
 import logo from '../images/logo.svg';
-import avatar from '../images/avatar.jpg';
+import avatar from '../images/avatar.png';
 import VacationTypePage from "./VacationTypePage";
 import VacationPage from "./VacationPage";
 
@@ -100,7 +100,9 @@ const UserProfile = () => {
 
             <div className="user-profile">
                 <div className="user-actions">
+                {role === "3" && (
                     <button className="user-action" onClick={handleNavigateToStructure}>Перейти к структуре компании</button>
+                    )}
                     <button className="user-action" onClick={handleOpenModal}>Запланировать отпуск</button>
                     <button className="user-action" onClick={handleNavigateToMyPlan}>Мой план</button>
                     <button className="user-action">График</button>

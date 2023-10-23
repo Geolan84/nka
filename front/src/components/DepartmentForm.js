@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import "../css/CompanyStructure.css";
+import { useNavigate, useParams } from "react-router-dom";
 import logo from '../images/logo.svg';
+import "../css/DepartmentForm.css";
 
 const DepartmentForm = () => {
-    const navigate = useNavigate(); // Добавляем импорт useNavigate
+    const navigate = useNavigate();
     const { departmentId } = useParams();
-    const id = departmentId.split('=')[1]; // Извлекаем значение 'id' из параметра
+    const id = departmentId.split('=')[1];
     const [departmentData, setDepartmentData] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAddingUser, setIsAddingUser] = useState(false);
@@ -15,7 +15,7 @@ const DepartmentForm = () => {
         email: "",
         first_name: "",
         second_name: "",
-        patronymic_name: "",
+        patronymic: "",
         is_head: false,
     });
 
@@ -28,42 +28,6 @@ const DepartmentForm = () => {
             .catch((error) => {
                 console.error("Ошибка при получении данных подразделения:", error);
             });
-    };
-
-    const handleDepartmentClick = (departmentId) => {
-        navigate(`/structure/dep=${departmentId}`);
-    };
-
-    const renderDepartments = (departments) => {
-        return (
-            <ul>
-                {departments.map((department) => (
-                    <li key={department.department_id}>
-                        <span
-                            onClick={() => handleDepartmentClick(department.department_id)}
-                            style={{ cursor: "pointer" }}
-                        >
-                            {department.department_name}
-                        </span>
-                        {department.departments && department.departments.length > 0 && (
-                            renderDepartments(department.departments)
-                        )}
-                    </li>
-                ))}
-            </ul>
-        );
-    };
-
-    const renderUsers = (users) => {
-        return (
-            <ul>
-                {users.map((user) => (
-                    <li key={user.user_id}>
-                        {user.first_name} {user.second_name} {user.patronymic} ({user.email}) {user.role_id === 1 ? "Сотрудник" : user.role_id === 2 ? "Начальник" : user.role_id === 3 ? "Администратор" : "Неизвестно"}
-                    </li>
-                ))}
-            </ul>
-        );
     };
 
     useEffect(() => {
@@ -127,17 +91,50 @@ const DepartmentForm = () => {
         navigate(`/profile`);
     };
 
-    return (
+    const handleDepartmentClick = (departmentId) => {
+        navigate(`/structure/dep=${departmentId}`);
+    };
 
+    const renderUsers = (users) => {
+        return users.map((user) => (
+            <tr key={user.user_id}>
+                <td className="my-plan-data">
+                    {`${user.first_name} ${user.second_name} ${user.patronymic}`}
+                </td>
+                <td className="my-plan-data">{user.email}</td>
+                <td className="my-plan-data">{user.role_id === 1 ? "Сотрудник" : user.role_id === 2 ? "Начальник" : user.role_id === 3 ? "Администратор" : "Неизвестно"}</td>
+            </tr>
+        ));
+    };
+
+    const renderDepartments = (departments) => {
+        return departments.map((department) => (
+            <div
+                key={department.department_id}
+                onClick={() => handleDepartmentClick(department.department_id)} // Обработчик клика на подразделение
+                className="clickable-department" // Добавьте класс для стилизации как кликабельных
+            >
+                {department.department_name}
+            </div>
+        ));
+    };
+
+    return (
         <div>
             <div className="header0">
                 <img onClick={handleBackInProf} src={logo} alt="Logo" />
-                <button className="user-logout" onClick={handleBackInProf}>Назад в профиль</button>
+                <h1>{departmentData.department_name}</h1>
+                <div className="heder-buttons">
+                    <button className="login-button" onClick={handleBackInProf}>
+                        Назад в профиль
+                    </button>
+                    <button className="login-button" onClick={handleBackInStruct}>
+                        Назад к структуре компании
+                    </button>
+                </div>
             </div>
-            <h1>Подразделение {departmentData.department_name}</h1>
-            <button onClick={handleBackInStruct}>Назад к структуре компании</button>
-            <button onClick={() => setIsModalOpen(true)}>Добавить звено</button>
-            <button onClick={() => setIsAddingUser(true)}>Добавить сотрудника</button>
+
+            
 
             {isModalOpen && (
                 <div className="modal-overlay">
@@ -159,9 +156,9 @@ const DepartmentForm = () => {
                 </div>
             )}
 
-        {isAddingUser && (
+            {isAddingUser && (
                 <div className="modal-overlay">
-                    <div className="modal-user"> {/* Отдельный класс для модального окна сотрудника */}
+                    <div className="modal-user">
                         <div className="modal-card">
                             <h2>Добавить сотрудника</h2>
                             <input
@@ -206,20 +203,34 @@ const DepartmentForm = () => {
             )}
 
             <div>
+                <h2>Сотрудники:</h2>
+                {departmentData.users ? (
+                    <table className="my-plan-table user-table">
+                        <thead>
+                            <tr>
+                                <th className="my-plan-header">ФИО</th>
+                                <th className="my-plan-header">Почта</th>
+                                <th className="my-plan-header">Должность</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {renderUsers(departmentData.users)}
+                        </tbody>
+                    </table>
+                ) : (
+                    <p>{departmentData.loading ? "Загрузка..." : "Тут пока нет сотрудников"}</p>
+                )}
+                <button className="add-user-button" onClick={() => setIsAddingUser(true)}>Добавить сотрудника</button>
+            </div>
+
+            <div>
                 <h2>Существующие подразделения:</h2>
                 {departmentData.departments ? (
                     renderDepartments(departmentData.departments)
                 ) : (
                     <p>{departmentData.loading ? "Загрузка..." : "Тут пока нет подразделений"}</p>
                 )}
-            </div>
-            <div>
-                <h2>Сотрудники:</h2>
-                {departmentData.users ? (
-                    renderUsers(departmentData.users)
-                ) : (
-                    <p>{departmentData.loading ? "Загрузка..." : "Тут пока нет сотрудников"}</p>
-                )}
+                <button className="add-dep-button" onClick={() => setIsModalOpen(true)}>Добавить подразделение</button>
             </div>
         </div>
     );

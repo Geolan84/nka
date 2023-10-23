@@ -46,18 +46,7 @@ const HomePage = () => {
                 <h1>Этот сервис подходит Вам, если:</h1>
             </div>
             <div className="centered-image-container">
-            <div className="image-container">
-                <div className="photo_container">
-                    <div className="image">
-                        <img src="https://image2.thematicnews.com/uploads/topics/preview/00/20/64/34/96b74dd26e.jpg"
-                             alt="Photo 3"/>
-                    </div>
-                    <div className="image">
-                        <img src="https://image2.thematicnews.com/uploads/topics/preview/00/20/64/34/96b74dd26e.jpg"
-                             alt="Photo 4"/>
-                    </div>
-                </div>
-                <div className="photo_container">
+                
                     <div className="plus">
                         <div className="point_svg">
                             <img src={point} alt="point"/>
@@ -79,8 +68,6 @@ const HomePage = () => {
                         Вам нужна большая гибкость и прозрачность в планировании отпусков.
                     </div>
                 </div>
-                </div>
-            </div>
             <div className="centered-p-home">
                 <p className="p-home">Copyrights 2023 &copy; nka.ru</p>
             </div>

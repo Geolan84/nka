@@ -125,8 +125,8 @@ const Approve = () => {
               <td className="my-plan-cell">
                 {app.status_id === 1 ? (
                   <>
-                    <button onClick={() => handleApprove(app.application_id)}>Согласовать</button>
-                    <button onClick={() => handleReject(app.application_id)}>Отказать</button>
+                    <button className="ToApprove" onClick={() => handleApprove(app.application_id)}>Согласовать</button>
+                    <button className="Deny" onClick={() => handleReject(app.application_id)}>Отказать</button>
                   </>
                 ) : (
                   "Нельзя согласовать"

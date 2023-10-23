@@ -1,0 +1,43 @@
+/* Стили для списка сотрудников */
+.user-list {
+  list-style: none;
+  padding: 0;
+}
+
+.user-item {
+  margin: 5px 0;
+}
+
+/* Стили для кнопок добавления сотрудника */
+.add-user-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.add-user-button:hover {
+  background-color: #0056b3;
+}
+
+.my-plan-data {
+  border: 1px solid #000; /* Добавляет границы между ячейками */
+  padding: 8px; /* Добавляет отступ внутри ячейки для лучшего визуального разделения */
+}
+
+.add-dep-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.add-dep-button:hover {
+  background-color: #0056b3;
+}

@@ -14,6 +14,10 @@
   margin-right: 10px;
 }
 
+.header0 .heder-buttons {
+  display: flex; /* Размещение кнопок внутри heder-buttons на одной строке */
+}
+
 .header0 button {
   background-color: #242424;
   color: #ffffff;

@@ -183,6 +183,7 @@
 
 .FormDep h2{
   font-size: 35px;
+  padding-left: 65px;
 }
 
 .tree_label:hover {
@@ -216,7 +217,7 @@
 .tree_buttons button {
   margin-left: 5px;
   padding: 8px 16px;
-  background: #007bff;
+  background: #ffffff;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -224,7 +225,7 @@
 }
 
 .tree_buttons button:hover {
-  background: #0056b3;
+  background: #a0a0a0;
 }
 
 .tree-label-container {
@@ -232,4 +233,118 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
+
+/* Style for the tree buttons and icons */
+.action-button-struc {
+  margin-left: 5px;
+  padding: 0; /* Remove padding to control the button size with fixed width and height */
+  width: 40px; /* Set a fixed width and height for the buttons */
+  height: 30px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-icon-struc {
+  width: 40px; /* Set a fixed size for the icons */
+  height: 30px;
+  cursor: pointer;
+  transition: color 0.3s;
+  color: #000;
+}
+
+.action-button-struc:hover .action-icon-struc {
+  color: #888;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.user-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+  display: block;
+  margin: 0 auto;
+}
+
+.user-button:hover {
+  background-color: #006ce0;
+}
+
+.radio-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.radio-button {
+  padding: 10px 20px;
+  background-color: #007bff; /* Цвет кнопки */
+  color: #fff; /* Цвет текста */
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.inactive-button {
+  background-color: #ccc; /* Цвет не выбранной кнопки */
+}
+
+.radio-button:hover {
+  background-color: #0056b3; /* Цвет при наведении */
+}
+
+.active-button {
+  background-color: #007bff; /* Цвет выбранной кнопки */
+}
+
+.active-button:hover {
+  background-color: #0056b3; /* Цвет при наведении */
+}
+
+.radio-button-group {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.radio-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.inactive-button {
+  background-color: #ccc;
+}
+
+.radio-button:hover {
+  background-color: #0056b3;
+}
+
+.active-button {
+  background-color: #007bff;
+}
+
+.active-button:hover {
+  background-color: #0056b3;
 }

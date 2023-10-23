@@ -119,7 +119,9 @@ const VacationTypePage = ({ onClose }) => {
       <div className="count-days-vac-type">
         Выбрано {countSelectedDays()} дней отпуска
       </div>
+      <div className="comment-container-vac-type">
       <label className="date-label-vac-type">Тип отпуска:</label>
+      
       <select
         value={vacationType}
         onChange={handleVacationTypeChange}
@@ -131,13 +133,17 @@ const VacationTypePage = ({ onClose }) => {
         <option value={5}>Учебный отпуск</option>
         <option value={6}>Донорский день</option>
       </select>
+      </div>
+      <div className="comment-container-vac-type">
       <label className="comment-label-vac-type">Комментарий:</label>
       <input
         type="text"
         value={comment}
         onChange={handleCommentChange}
-        className="comment-input-vac-type"
+        className="comment-input-vac"
       />
+      </div>
+      <div className="date-container-vac-type">
       <label className="date-label-vac-type">Дата начала:</label>
       <DatePicker
         selected={startDate}
@@ -149,6 +155,8 @@ const VacationTypePage = ({ onClose }) => {
         dateFormat="yyyy-MM-dd"
         className="date-picker-vac-type"
       />
+      </div>
+      <div className="date-container-vac-type">
       <label className="date-label-vac-type">Дата окончания:</label>
       <DatePicker
         selected={endDate}
@@ -161,6 +169,7 @@ const VacationTypePage = ({ onClose }) => {
         dateFormat="yyyy-MM-dd"
         className="date-picker-vac-type"
       />
+      </div>
       <div className="action-buttons-vac-type">
         <button onClick={handleSendVacationRequest}>Отправить заявку на отпуск</button>
         <button onClick={handleBackInProf}>Назад в профиль</button>

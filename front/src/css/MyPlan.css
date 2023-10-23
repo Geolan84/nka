@@ -41,6 +41,33 @@
     display: block;
     margin: 0 auto;
   }
+
+  .ToApprove {
+    background-color: #4CAF50; /* Зеленый цвет для кнопки "Согласовать" */
+    margin-right: 5px;
+  }
+
+  .Deny {
+    background-color: #FF5733; /* Красный цвет для кнопки "Отказать" */
+  }
+
+  .ToApprove, .Deny {
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .ToApprove:hover {
+    background-color: #3f9243; /* Темнее зеленый цвет при наведении на "Согласовать" */
+  }
+
+  .Deny:hover {
+    background-color: #c43a1b;
+  }
   
   @media (max-width: 768px) {
     .my-plan-table {
@@ -61,4 +88,3 @@
       margin-top: 10px;
     }
   }
-  

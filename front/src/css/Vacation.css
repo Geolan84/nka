@@ -51,6 +51,9 @@
     border-color: #0056b3;
     outline: none;
   }
+  .action-buttons-vac {
+    margin-top: 20px;
+  }
   
   .action-buttons-vac button {
     background-color: #007bff;
@@ -75,7 +78,7 @@
     }
   }
 
-  .comment-container {
+  .comment-container-vac {
     display: flex;
     align-items: center;
     height: 45px; /* Align label and input vertically */
@@ -104,6 +107,7 @@
     display: block;
     text-align: left;
     margin-top: 10px;
+    margin-right: 10px;
   }
   
   .date-picker-vac {

@@ -95,6 +95,18 @@ const VacationPage = ({ onClose }) => {
     return 0;
   };
 
+  // Идентификаторы документов Consultant.ru для гиперссылок
+  const linkIds = [
+    "7c366ded2c0c00fa6bcf8f2ca11917e7075f9cef",
+    "1ea2cd88521106bc484f44be9e24fa81034d13e5",
+    "4b81f3bdfda7b890f6be7740c3d91e8bd6afda5d",
+    "56236a39da1eba84f52b37d378edbffd1710628e",
+    "627272a057d8634b0366744b16b04a6853d96fad",
+    "5096118a0d71c28f406acf6275cd6c1c36efe705",
+    "befc35b415ff7b334824418693252b451205ffc0",
+    "2f173da324a5464ef649b88f7347b8a17d200dae",
+  ];
+
   return (
     <div className="container-vac">
       <div className="header-vac">
@@ -110,7 +122,7 @@ const VacationPage = ({ onClose }) => {
       <div className="count-days-vac">
         Выбрано {countSelectedDays()} дней отпуска
       </div>
-      <div className="comment-container">
+      <div className="comment-container-vac">
         <label className="comment-label-vac">Комментарий:</label>
         <input
           type="text"
@@ -149,7 +161,25 @@ const VacationPage = ({ onClose }) => {
       </div>
       <div className="action-buttons-vac">
         <button onClick={handleSendVacationRequest}>Отправить заявку на отпуск</button>
-        <button onClick={handleBackInProf}>Назад в профиль</button> {/* Вызываем функцию при нажатии на кнопку */}
+        <button onClick={handleBackInProf}>Назад в профиль</button>
+      </div>
+
+      <div className="learn-more-links">
+        <p>
+          Подробнее об основном отпуске:{" "}
+          {linkIds.map((linkId, index) => (
+            <a
+              key={index}
+              href={`https://www.consultant.ru/document/cons_doc_LAW_34683/${linkId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              {index < linkIds.length && index > 0 ? `, ` : ``}
+              [{index}]
+            </a>
+          ))}
+        </p>
       </div>
     </div>
   );
