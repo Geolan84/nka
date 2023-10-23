@@ -67,7 +67,7 @@ class StructRepository:
         try:
             connection = await asyncpg.connect(DATABASE_URL)
             users = await connection.fetch(
-                "select user_id, second_name, first_name, patronymic, email, department_id, department_name from users join department using(department_id) order by second_name;"
+                "select user_id, second_name, first_name, patronymic, email, department_id, department_name from users left join department using(department_id) order by second_name;"
             )
             return {} if users is None else {"users": [dict(x) for x in users]}
         except Exception as e:
