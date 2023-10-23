@@ -36,12 +36,12 @@ const UserProfile = () => {
         navigate("/structure");
     };
 
-    const handleNavigateToVacation = () => {
-        navigate("/vacation");
-    };
-
     const handleNavigateToMyPlan = () => {
         navigate("/my-plan");
+    };
+
+    const handleNavigateToReference = () => {
+        navigate("/reference");
     };
 
     const toggleDropdown = () => {
@@ -113,7 +113,7 @@ const UserProfile = () => {
                         <button className="user-action" onClick={handleNavigateToApprove}>Подтвердить отпуска</button>
                     )}
 
-                    <button className="user-action">Справочный центр</button>
+                    <button className="user-action" onClick={handleNavigateToReference}>Справочный центр</button>
                 </div>
 
                 <div className="user-profile-2">

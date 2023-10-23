@@ -9,10 +9,12 @@
   }
   
   .my-plan-table {
-    width: 100%;
+    width: 95%;
     border-collapse: collapse;
     border: 1px solid #ccc;
     margin-bottom: 20px;
+    margin-right: 50px;
+    margin-left: 50px;
   }
   
   .my-plan-header {

@@ -27,7 +27,7 @@
 .modal {
   background: #fff;
   width: 300px; /* Ширина модального окна */
-  height: 200px; /* Увеличьте высоту для увеличения поля ввода */
+  height: 150px; /* Увеличьте высоту для увеличения поля ввода */
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   text-align: center;
@@ -321,6 +321,7 @@
   display: flex;
   justify-content: flex-start;
   margin-bottom: 10px;
+  margin-left: 50px;
 }
 
 .radio-button {

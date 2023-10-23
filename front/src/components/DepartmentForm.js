@@ -99,7 +99,7 @@ const DepartmentForm = () => {
         return users.map((user) => (
             <tr key={user.user_id}>
                 <td className="my-plan-data">
-                    {`${user.first_name} ${user.second_name} ${user.patronymic}`}
+                    {`${user.second_name} ${user.first_name} ${user.patronymic}`}
                 </td>
                 <td className="my-plan-data">{user.email}</td>
                 <td className="my-plan-data">{user.role_id === 1 ? "Сотрудник" : user.role_id === 2 ? "Начальник" : user.role_id === 3 ? "Администратор" : "Неизвестно"}</td>

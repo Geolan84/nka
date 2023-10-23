@@ -13,6 +13,9 @@ const CompanyStructure = () => {
     const [showDepartments, setShowDepartments] = useState(true);
     const [userChanges, setUserChanges] = useState({});
     const [isDataFetched, setIsDataFetched] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newDivision, setNewDivision] = useState("");
+    const [dep_id, setDep_id] = useState("");
     const navigate = useNavigate();
 
     const fetchAllData = async (token) => {
@@ -63,10 +66,6 @@ const CompanyStructure = () => {
         }
     }, [isDataFetched]);
 
-    const handleBackInProf = () => {
-        navigate("/profile");
-    };
-
     const toggleDepartment = (departmentId) => {
         setDivisions((prevState) => {
             const updatedDivisions = toggleDepartmentVisibility(prevState, departmentId);
@@ -86,6 +85,53 @@ const CompanyStructure = () => {
             }
             return department;
         });
+    };
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setNewDivision("");
+    };
+
+    const changDivision = () => {
+        // Обработка добавления нового подразделения
+        closeModal();
+    };
+
+    const handleEditDepartment = (departmentId) => {
+        openModal();
+        setDep_id(departmentId);
+    };
+
+    
+
+    const renderAddDivisionModal = () => {
+        return (
+            <div className="modal-overlay">
+                <div className="modal">
+                    <div className="modal-card">
+                        <h2>Изменить название отдела</h2>
+                        <input
+                            type="text"
+                            placeholder="Новое название"
+                            value={newDivision}
+                            onChange={(e) => setNewDivision(e.target.value)}
+                        />
+                        <div className="modal-buttons">
+                            <button onClick={() => editDepartment(dep_id)}>Изменить</button> {/* Call editDepartment on button click */}
+                            <button onClick={closeModal}>Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const handleBackInProf = () => {
+        navigate("/profile");
     };
 
     const handleSelectChange = (userId, selectedDepartmentId) => {
@@ -123,7 +169,7 @@ const CompanyStructure = () => {
                                         <img
                                             src={iconEdit}
                                             alt="Edit Icon"
-                                            onClick={() => handleRenameDepartment(department.department_id)}
+                                            onClick={() => handleEditDepartment(department.department_id)}
                                             className="action-icon-struc"
                                         />
                                     </button>
@@ -207,9 +253,44 @@ const CompanyStructure = () => {
         );
     };
 
-    const handleRenameDepartment = (departmentId) => {
-        // Обработка переименования отдела
+    const editDepartment = async (departmentId) => {
+        try {
+            const token = localStorage.getItem("token");
+            const newDepartmentName = encodeURIComponent(newDivision); // Кодирование значения newDivision
+    
+            const url = `http://localhost:8080/struct/edit_department?new_name=${newDepartmentName}&department_id=${departmentId}`;
+    
+            const response = await fetch(url, {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    new_name: newDivision,
+                    department_id: departmentId,
+                }),
+            });
+    
+            if (response.ok) {
+                // Обработка успешного ответа по необходимости
+                console.log("Отдел успешно обновлен");
+    
+                // Загрузка обновленных данных
+                await fetchAllData(token);
+    
+                closeModal(); // Закрыть модальное окно после успешного обновления.
+            } else {
+                // Обработка ошибок или отображение сообщения об ошибке.
+                console.error("Не удалось обновить отдел");
+            }
+        } catch (error) {
+            console.error("Ошибка:", error);
+        }
     };
+    
+    
+    
 
     const handleDeleteDepartment = (departmentId) => {
         // Обработка удаления отдела
@@ -252,8 +333,10 @@ const CompanyStructure = () => {
                 {showDepartments && divisions.length > 0 && renderDepartments(divisions)}
                 {!showDepartments && users.length > 0 && renderUsers(users)}
             </div>
+            {isModalOpen && renderAddDivisionModal()}
         </div>
     );
 };
 
 export default CompanyStructure;
+
