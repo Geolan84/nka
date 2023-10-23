@@ -63,6 +63,19 @@ class StructRepository:
             await connection.close()
 
     @staticmethod
+    async def get_all_users():
+        try:
+            connection = await asyncpg.connect(DATABASE_URL)
+            users = await connection.fetch(
+                "select user_id, second_name, first_name, patronymic, email, department_id, department_name from users join department using(department_id) order by second_name;"
+            )
+            return {} if users is None else {"users": [dict(x) for x in users]}
+        except Exception as e:
+            print(e)
+        finally:
+            await connection.close()
+
+    @staticmethod
     async def get_all_departments():
         try:
             connection = await asyncpg.connect(DATABASE_URL)
@@ -161,6 +174,19 @@ class StructRepository:
                 )
         except Exception as e:
             return e
+        finally:
+            await connection.close()
+
+    @staticmethod
+    async def get_departments_names():
+        try:
+            connection = await asyncpg.connect(DATABASE_URL)
+            rows = await connection.fetch(
+                "select department_id, department_name from department;"
+            )
+            return {"departments_list": [] if rows is None else [dict(x) for x in rows]}
+        except Exception as e:
+            print(e)
         finally:
             await connection.close()
 

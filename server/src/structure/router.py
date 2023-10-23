@@ -24,6 +24,25 @@ async def edit_department(new_name: str, department_id: int):
         raise HTTPException(status_code=400, detail=department_error)
 
 
+@router.get("/get_all_users", status_code=200)
+async def get_all_departments(token: HTTPAuthorizationCredentials = Security(bearer)):
+    info = read_token(token)
+    if info is None:
+        raise HTTPException(
+            status_code=401, detail="Not authorized. Use /auth/login endpoint."
+        )
+    role = info.get("role")
+    if role is None or role < 2:
+        raise HTTPException(
+            status_code=403, detail="Forbidden. You are not head or admin."
+        )
+    try:
+        res = await struct.get_all_users()
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @router.get("/get_all_departments", status_code=200)
 async def get_all_departments(token: HTTPAuthorizationCredentials = Security(bearer)):
     info = read_token(token)
@@ -84,6 +103,19 @@ async def get_heads(token: HTTPAuthorizationCredentials = Security(bearer)):
     heads = await struct.get_heads()
     if heads is None:
         raise HTTPException(status_code=400, detail="Some problems with heads.")
+    return heads
+
+
+@router.get("/department_names", status_code=200)
+async def get_heads(token: HTTPAuthorizationCredentials = Security(bearer)):
+    info = read_token(token)
+    if info is None:
+        raise HTTPException(
+            status_code=401, detail="Not authorized. Use /auth/login endpoint."
+        )
+    heads = await struct.get_departments_names()
+    if heads is None:
+        raise HTTPException(status_code=400, detail="Some problems with request.")
     return heads
 
 
