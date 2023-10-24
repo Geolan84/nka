@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials
 from token_manager import bearer, read_token
+from config import ApplicationStatus
+from datetime import date
 
 from applications.schemas import ApplicationBody
 from applications.applications_repository import ApplicationsRepository
 from mail.mail_base import MailSender
 
-# from applications.converter import convert_app_to_pdf
+from applications.converter import convert_app_to_pdf
 
 
 router = APIRouter(prefix="/apps", tags=["Applications"])
@@ -71,24 +73,38 @@ async def change_status(
         raise HTTPException(
             status_code=403, detail="Forbidden. You are not head or admin."
         )
-    change_error = await ApplicationsRepository.change_status(
-        app_id, status_id, user_id
-    )
+    next_head = await ApplicationsRepository.get_head(user_id)
+    if status_id == ApplicationStatus.PROCESSING and next_head is None:
+        change_error = await ApplicationsRepository.change_status(
+            app_id, ApplicationStatus.ACCESSED, user_id
+        )
+    else:
+        change_error = await ApplicationsRepository.change_status(
+            app_id, status_id, user_id
+        )
     if change_error is not None:
         raise HTTPException(status_code=400, detail=change_error)
 
 
-# @router.get("/get_pdf", response_class=200)
+# @router.get("/get_pdf", status_code=200)
 # async def get_pdf(
-#     app_id: int, head_id: int, token: HTTPAuthorizationCredentials = Security(bearer)
+#     head_id: int,
+#     type_id: int,
+#     start_date: date,
+#     end_date: date,
+#     token: HTTPAuthorizationCredentials = Security(bearer),
 # ):
 #     info = read_token(token)
 #     if info is None:
 #         raise HTTPException(
 #             status_code=401, detail="Not authorized. Use /auth/login endpoint."
 #         )
-#     data = await ApplicationsRepository.get_print_data(app_id, head_id)
-#     return convert_app_to_pdf()
+#     user_id = info.get("user_id")
+#     data = await ApplicationsRepository.get_print_data(
+#         type_id, start_date, end_date, user_id, head_id
+#     )
+#     convert_app_to_pdf(data)
+# return convert_app_to_pdf()
 
 
 @router.post("/new_app", status_code=201)

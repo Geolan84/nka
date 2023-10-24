@@ -6,13 +6,14 @@ from auth.router import router as router_auth
 from admin.router import router as router_admin
 from structure.router import router as router_struct
 from applications.router import router as router_applications
+from dashboard.router import router as router_dashboard
 
 origins = [
     "http://localhost",
     "http://localhost:3000",
 ]
 
-app = FastAPI(title="NKA") # docs_url=None, redoc_url=None)
+app = FastAPI(title="NKA")  # docs_url=None, redoc_url=None)
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,10 +28,12 @@ app.add_middleware(
 def read_root():
     return "Hello from NKA API:)"
 
+
 app.include_router(router=router_auth)
 app.include_router(router=router_admin)
 app.include_router(router=router_struct)
 app.include_router(router=router_applications)
+app.include_router(router=router_dashboard)
 
 
 if __name__ == "__main__":

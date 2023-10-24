@@ -1,6 +1,7 @@
 from config import DATABASE_URL, ApplicationStatus
 import asyncpg
-from datetime import datetime
+from config import vacation_names
+from datetime import datetime, date
 
 
 class ApplicationsRepository:
@@ -29,17 +30,9 @@ class ApplicationsRepository:
             )
             apps = await connection.fetch(
                 """
-            select
-                *
-            from
-                (
                 select
+                    user_id,
                     application_id,
-                    users.user_id,
-                    email,
-                    first_name,
-                    second_name,
-                    patronymic,
                     type_id,
                     note,
                     start_date,
@@ -47,34 +40,55 @@ class ApplicationsRepository:
                     status_id,
                     moment,
                     verifier_id,
-                    role_id,
-                    case
-                        role_id
-                    when 1 then department_id
-                        when 2 then head_department_id
-                        else department_id
-                    end as next_dep_verify
+                    email,
+                    first_name,
+                    second_name,
+                    patronymic,
+                    department_id
                 from
                     (
                     select
-                        max(record_id) as record_id
+                        application_id,
+                        applications.user_id,
+                        type_id,
+                        note,
+                        start_date,
+                        end_date,
+                        status_id,
+                        moment,
+                        verifier_id,
+                        role_id,
+                        case
+                            role_id
+                                    when 1 then department_id
+                            when 2 then head_department_id
+                            else department_id
+                        end as next_dep_verify
                     from
-                        status_log
-                    group by
-                        application_id) as actual
-                join status_log
-                        using(record_id)
-                join users on
-                    status_log.verifier_id = users.user_id
-                join users_role
-                        using(user_id)
-                join department
-                        using(department_id)
-                join applications
-			            using(application_id)
-            ) as next_level
-            where
-                status_id = 1 and next_dep_verify = $1;""",
+                        (
+                        select
+                            max(record_id) as record_id
+                        from
+                            status_log
+                        group by
+                            application_id) as actual
+                    join status_log
+                            using(record_id)
+                    join users on
+                        status_log.verifier_id = users.user_id
+                    join users_role
+                            using(user_id)
+                    join department
+                            using(department_id)
+                    join applications
+                            using(application_id)
+                    ) as next_level
+                join users
+                    using(user_id)
+                where
+                    status_id = 1
+                    and type_id = 1
+                    and next_dep_verify = $1;""",
                 department_id,
             )
             return {"apps": [] if apps is None else [dict(x) for x in apps]}
@@ -87,16 +101,34 @@ class ApplicationsRepository:
     async def get_head(user_id: int):
         try:
             connection = await asyncpg.connect(DATABASE_URL)
-            department_id = await connection.fetchval(
-                "select department_id from users where user_id = $1;", user_id
+            next_department_id = await connection.fetchval(
+                """select
+                        case
+                            role_id
+                                    when 1 then department_id
+                            when 2 then head_department_id
+                            else department_id
+                        end as next_dep_verify
+                    from
+                        users
+                    join users_role
+                            using(user_id)
+                    join department
+                            using(department_id)
+                    where user_id = $1;""",
+                user_id
+                # "select department_id from users where user_id = $1;", user_id
             )
+            if next_department_id is None:
+                return None
+            # хотим user_id, email, first_name, second_name, patronymic, role_id, department_id, department_name руководителя
             head = await connection.fetchrow(
                 """
             select user_id, email, first_name, second_name, patronymic, role_id,
             department_id, department_name from users join department using(department_id) join users_role using(user_id)
-            where role_id > 1 and department.department_id = $1;
+            where role_id=2 and department.department_id = $1;
                                              """,
-                department_id,
+                next_department_id,
             )
             return head if head is None else dict(head)
         except Exception as e:
@@ -153,30 +185,36 @@ class ApplicationsRepository:
         finally:
             await connection.close()
 
-    # @staticmethod
-    # async def get_print_data(app_id: int, head_id: int):
-    #     try:
-    #         print_data = dict()
-    #         connection = await asyncpg.connect(DATABASE_URL)
-    #         print_data["receiver_department"] = await connection.fetchval(
-    #             "select department_name from users join department using(department_id) where user_id = $1;",
-    #             head_id,
-    #         )
+    @staticmethod
+    async def get_print_data(
+        type_id: int, start_date: date, end_date: date, user_id: int, head_id: int
+    ):
+        try:
+            print_data = dict()
+            print_data["start_date"] = start_date
+            print_data["end_date"] = end_date
+            print_data["title"] = vacation_names.get(type_id)
 
-    #         receiver = await connection.fetchrow(
-    #             "select first_name, second_name, patronymic from users where user_id=$1;",
-    #             head_id,
-    #         )
-    #         print_data.update(dict(receiver))
+            connection = await asyncpg.connect(DATABASE_URL)
+            # print_data["receiver_department"] = await connection.fetchval(
+            #     "select department_name from users join department using(department_id) where user_id = $1;",
+            #     head_id,
+            # )
 
-    #         sender = await connection.fetchrow(
-    #             "select start_date, end_date, first_name, second_name, patronymic, app_name from applications join users using(user_id) join application_types using(type_id) where application_id=$1;",
-    #             app_id,
-    #         )
-    #         print_data.update(dict(sender))
+            receiver = await connection.fetchrow(
+                "select first_name as head_name, second_name as head_surname, patronymic as head_patronymic from users where user_id=$1;",
+                head_id,
+            )
+            # print_data.update(dict(receiver))
 
-    #         return print_data
-    #     except Exception as e:
-    #         print(e)
-    #     finally:
-    #         await connection.close()
+            sender = await connection.fetchrow(
+                "select first_name, second_name, patronymic from users where user_id=$1;",
+                user_id,
+            )
+            print_data.update(dict(sender))
+
+            return print_data
+        except Exception as e:
+            print(e)
+        finally:
+            await connection.close()

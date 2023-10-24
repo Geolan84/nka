@@ -1,4 +1,3 @@
-"""
 import fpdf
 from pytrovich.enums import NamePart, Gender, Case
 from pytrovich.maker import PetrovichDeclinationMaker
@@ -18,14 +17,19 @@ def __translate_to_dative(name, surname, patronymic):
 def convert_app_to_pdf(app: dict):
     pdf = FPDF()
     pdf.add_page()
-    pdf.add_font("DejaVu", "", "DejaVuSansCondensedBook.ttf", uni=True)
+    pdf.add_font(
+        "DejaVu",
+        "",
+        "/home/nemo/dev/nka/server/src/applications/font/DejaVuSansCondensedBook.ttf",
+        uni=True,
+    )
     pdf.set_font("DejaVu", size=12)
     date = datetime.today().strftime("%d.%m.%y")
 
     pdf.cell(
         180,  # ширина клетки
         10,  # высота,
-        txt=f'Заявление на {app.get("app_name")}',
+        txt=f'Заявление на {app.get("title")}',
         ln=1,  # разрыв строки
         align="L",
     )
@@ -38,14 +42,34 @@ def convert_app_to_pdf(app: dict):
         align="R",
     )
     receiver = __translate_to_dative(
-        app.get("first_name"), app.get("second_name"), app.get("patronymic")
+        app.get("head_surname"),
+        app.get("head_name"),
+        app.get("head_patronymic"),
     )
+
+    sender = __translate_to_dative(
+        app.get("second_name"), app.get("first_name"), app.get("patronymic")
+    )
+
     pdf.cell(180, 10, txt=receiver, ln=1, align="R")
 
     pdf.cell(180, 10, txt=f"      ", ln=1, align="R")
 
     pdf.cell(180, 10, txt=f"Заявление", ln=2, align="C")
 
+    # pdf.multi_cell(
+    #     180,  # ширина клетки
+    #     10,  # высота,
+    #     border=0,
+    #     txt=f"Я, {}, проживающая по адресу {indx},г. {city}, ул. {street}, д. {house}, кв. {apart}, паспорт {p_serie} {p_num} выдан {when} {who}, прошу предоставить мне отпуск {prichina} с {start_date} по {end_date}.",
+    #     # ln = 1, # разрыв строки
+    #     align="L",
+    #     fill=0,
+    #     split_only=False,
+    # )
+
+    result = pdf.output(f"ЗаявлениеНаОтпуск.pdf")
+    """
     print("ФИО:")
     fio = str(input())
     print("Почтовый индекс:")
@@ -71,16 +95,7 @@ def convert_app_to_pdf(app: dict):
     print("Дата конца отпуска:")
     end_date = str(input())
     
-    pdf.multi_cell(
-        180,  # ширина клетки
-        10,  # высота,
-        border=0,
-        txt=f"Я, {fio}, проживающая по адресу {indx},г. {city}, ул. {street}, д. {house}, кв. {apart}, паспорт {p_serie} {p_num} выдан {when} {who}, прошу предоставить мне отпуск {prichina} с {start_date} по {end_date}.",
-        # ln = 1, # разрыв строки
-        align="L",
-        fill=0,
-        split_only=False,
-    )
+
     if prichina != "ежегодный оплачиваемый":
         print("Прикрепленное приложение:")
         add = str(input())
@@ -104,5 +119,5 @@ def convert_app_to_pdf(app: dict):
         pdf.cell(180, 10, border=0, txt=f"{fio}", ln=1, align="L", fill=0)
         pdf.cell(180, 10, border=0, txt=f"{date}", ln=1, align="L", fill=0)
 
-    result = pdf.output(f"ЗаявлениеНаОтпуск({fio}).pdf")
-"""
+    
+    """

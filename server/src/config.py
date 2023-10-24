@@ -1,15 +1,27 @@
 from decouple import config
 from enum import IntEnum
 
+
 class Role(IntEnum):
     EMPLOYEE = 1
     HEAD = 2
     ADMIN = 3
 
+
 class ApplicationStatus(IntEnum):
     PROCESSING = 1
     ACCESSED = 2
     REJECTED = 3
+
+
+vacation_names = {
+    1: "Основной отпуск",
+    2: "Дополнительный оплачиваемый отпуск",
+    3: "Отпуск без сохранения з/п",
+    4: "Отпуск по уходу за ребёнком",
+    5: "Учебный отпуск",
+    6: "Донорский день",
+}
 
 DB_USER = config("DB_USER")
 DB_PASS = config("DB_PASS")
