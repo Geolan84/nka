@@ -101,7 +101,7 @@ async def prepare_db():
         second_name="Конюхова",
         patronymic="Вячеславовна",
         department_id=3,
-        is_head=True,
+        is_head=False,
     )
     await StructRepository.add_new_user(dict(new_user))
     #
