@@ -35,3 +35,19 @@ MESSAGE_NEW_APPS = """
 </body>
 </html>
 """
+
+MESSAGE_UPDATED_APP = """
+<!DOCTYPE html>
+<html lang="ru">
+<body>
+<h2>Здравствуйте, {receiver}.</h2>
+<div class="wrap-flex">
+<p>По одной из ваших заявок на отпуск был обновлён статус согласования.</p>
+<a href="{link}">
+<button>Перейти к заявкам</button>
+</a>
+</div>
+<i style="font-size:11px;">Это письмо сформировано автоматически, отвечать на него не нужно.<br style="margin-top: 10px;"/> Ваш сервис управления отпусками, nka.</i>
+</body>
+</html>
+"""

@@ -223,6 +223,20 @@ class ApplicationsRepository:
             await connection.close()
 
     @staticmethod
+    async def get_author(app_id: int):
+        try:
+            connection = await asyncpg.connect(DATABASE_URL)
+            author = await connection.fetchrow(
+                "select email, first_name, second_name, patronymic from applications join users using(user_id) where application_id =$1;",
+                app_id,
+            )
+            return author
+        except Exception as e:
+            print(e)
+        finally:
+            await connection.close()
+
+    @staticmethod
     async def get_print_data(
         type_id: int, start_date: date, end_date: date, user_id: int, head_id: int
     ):

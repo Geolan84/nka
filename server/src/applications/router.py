@@ -67,12 +67,19 @@ async def change_status(
         )
     next_head = await ApplicationsRepository.get_head(user_id)
     if status_id == ApplicationStatus.PROCESSING and next_head is None:
-        change_error = await ApplicationsRepository.change_status(
-            app_id, ApplicationStatus.ACCESSED, user_id
+        status_id = ApplicationStatus.ACCESSED
+
+    change_error = await ApplicationsRepository.change_status(
+        app_id, status_id, user_id
+    )
+    if status_id != ApplicationStatus.PROCESSING:
+        user = await ApplicationsRepository.get_author(app_id)
+        receiver = f"{user.get('second_name')} {user.get('first_name')} {user.get('patronymic')}".replace(
+            "None", "".rstrip()
         )
-    else:
-        change_error = await ApplicationsRepository.change_status(
-            app_id, status_id, user_id
+        print(receiver, user.get("email"))
+        MailSender.send_status_updated(
+            user.get("email"), "http://localhost:3000/my-plan", receiver
         )
     if change_error is not None:
         raise HTTPException(status_code=400, detail=change_error)
