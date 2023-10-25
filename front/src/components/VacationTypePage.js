@@ -12,7 +12,7 @@ const VacationTypePage = ({ onClose }) => {
   const [comment, setComment] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [vacationType, setVacationType] = useState(1);
+  const [vacationType, setVacationType] = useState(2);
   const navigate = useNavigate();
   const user_id = localStorage.getItem("user_id");
   const [user, setUser] = useState(null);
@@ -41,6 +41,12 @@ const VacationTypePage = ({ onClose }) => {
 
   const handleSendVacationRequest = async () => {
     try {
+      const startDateToSend = new Date(startDate);
+      startDateToSend.setDate(startDateToSend.getDate() + 1);
+
+      const endDateToSend = new Date(endDate);
+      endDateToSend.setDate(endDateToSend.getDate() + 1);
+
       const response = await fetch("http://localhost:8080/apps/new_app", {
         method: "POST",
         headers: {
@@ -50,8 +56,8 @@ const VacationTypePage = ({ onClose }) => {
         body: JSON.stringify({
           type: vacationType,
           note: comment,
-          start_date: startDate.toISOString().split("T")[0],
-          end_date: endDate.toISOString().split("T")[0],
+          start_date: startDateToSend.toISOString().split("T")[0],
+          end_date: endDateToSend.toISOString().split("T")[0],
         }),
       });
 
@@ -152,7 +158,7 @@ const VacationTypePage = ({ onClose }) => {
         startDate={startDate}
         endDate={endDate}
         locale="ru"
-        dateFormat="yyyy-MM-dd"
+        dateFormat="dd-MM-yyyy"
         className="date-picker-vac-type"
       />
       </div>
@@ -166,7 +172,7 @@ const VacationTypePage = ({ onClose }) => {
         endDate={endDate}
         minDate={startDate}
         locale="ru"
-        dateFormat="yyyy-MM-dd"
+        dateFormat="dd-MM-yyyy"
         className="date-picker-vac-type"
       />
       </div>

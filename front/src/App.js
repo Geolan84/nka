@@ -9,6 +9,7 @@ import DepartmentForm from "./components/DepartmentForm";
 import VacationPage from "./components/VacationPage";
 import My_plan from "./components/My-plan";
 import Approve from "./components/Approve";
+import Dashboard from "./components/VacationDashboard";
 import ReferenceCenter from "./components/ReferenceCenter";
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/my-plan" element={<My_plan />} />
         <Route path="/approve" element={<Approve />} />
         <Route path="/reference" element={<ReferenceCenter />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );

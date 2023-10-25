@@ -102,7 +102,7 @@ const DepartmentForm = () => {
                     {`${user.second_name} ${user.first_name} ${user.patronymic}`}
                 </td>
                 <td className="my-plan-data">{user.email}</td>
-                <td className="my-plan-data">{user.role_id === 1 ? "Сотрудник" : user.role_id === 2 ? "Начальник" : user.role_id === 3 ? "Администратор" : "Неизвестно"}</td>
+                <td className="my-plan-data">{user.role_id === 1 ? "Сотрудник" : user.role_id === 2 ? "Руководитель" : user.role_id === 3 ? "Администратор" : "Неизвестно"}</td>
             </tr>
         ));
     };
@@ -203,7 +203,7 @@ const DepartmentForm = () => {
             )}
 
             <div>
-                <h2>Сотрудники:</h2>
+            <div className="dep-mas"><h2>Сотрудники:</h2></div>
                 {departmentData.users ? (
                     <table className="my-plan-table user-table">
                         <thead>
@@ -223,15 +223,15 @@ const DepartmentForm = () => {
                 <button className="add-user-button" onClick={() => setIsAddingUser(true)}>Добавить сотрудника</button>
             </div>
 
-            <div>
-                <h2>Существующие подразделения:</h2>
+            
+            <div className="dep-mas"><h2>Существующие подразделения:</h2>
                 {departmentData.departments ? (
                     renderDepartments(departmentData.departments)
                 ) : (
                     <p>{departmentData.loading ? "Загрузка..." : "Тут пока нет подразделений"}</p>
                 )}
-                <button className="add-dep-button" onClick={() => setIsModalOpen(true)}>Добавить подразделение</button>
             </div>
+                <button className="add-dep-button" onClick={() => setIsModalOpen(true)}>Добавить подразделение</button>
         </div>
     );
 };

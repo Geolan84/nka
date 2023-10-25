@@ -18,7 +18,6 @@ const Approve = () => {
   };
 
   const typeMappings = {
-    1: 'Основной отпуск',
     2: 'Дополнительный оплачиваемый отпуск',
     3: 'Отпуск без сохранения з/п',
     4: 'Отпуск по уходу за ребёнком',
@@ -77,16 +76,11 @@ const Approve = () => {
 
   const handleReject = (appId) => {
     // Отправить POST-запрос на сервер для отказа в заявке
-    fetch("http://localhost:8080/apps/approve", {
+    fetch(`http://localhost:8080/apps/approve?app_id=${appId}&status_id=3`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        app_id: appId,
-        status_id: 3, // 3 - Отказать
-      }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -110,7 +104,7 @@ const Approve = () => {
             <th className="my-plan-header">Комментарий</th>
             <th className="my-plan-header">Дата начала</th>
             <th className="my-plan-header">Дата окончания</th>
-            <th className="my-plan-header">Дата подачи</th>
+            <th className="my-plan-header">Дата обновления</th>
             <th className="my-plan-header">Действия</th>
           </tr>
         </thead>

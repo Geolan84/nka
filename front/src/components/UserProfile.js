@@ -44,6 +44,10 @@ const UserProfile = () => {
         navigate("/reference");
     };
 
+    const handleNavigateToDashboard = () => {
+        navigate("/dashboard");
+    };
+
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
     };
@@ -54,7 +58,7 @@ const UserProfile = () => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-
+        
         if (!token) {
             navigate("/login");
             return;
@@ -105,7 +109,7 @@ const UserProfile = () => {
                     )}
                     <button className="user-action" onClick={handleOpenModal}>Запланировать отпуск</button>
                     <button className="user-action" onClick={handleNavigateToMyPlan}>Мой план</button>
-                    <button className="user-action">График</button>
+                    <button className="user-action" onClick={handleNavigateToDashboard}>График</button>
 
                     <button className="user-action" onClick={handleOpenTypeModal}>Иное отсутствие</button>
 
@@ -124,10 +128,10 @@ const UserProfile = () => {
                         <div className="user-details">
                             {user ? (
                                 <>
-                                    <p>{user.first_name} {user.second_name} {user.patronymic}</p>
+                                    <p>{user.second_name} {user.first_name} {user.patronymic}</p>
                                     <p>Отдел: {user.department_name}</p>
                                     <p>Email: {user.email}</p>
-                                    <p>Роль: {role === "1" ? "Сотрудник" : role === "2" ? "Начальник" : role === "3" ? "Администратор" : "Неизвестно"}</p>
+                                    <p>Роль: {role === "1" ? "Сотрудник" : role === "2" ? "Руководитель" : role === "3" ? "Администратор" : "Неизвестно"}</p>
                                 </>
                             ) : (
                                 <p>Информация о пользователе не найдена</p>

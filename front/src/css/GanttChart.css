@@ -1,0 +1,100 @@
+.gantt-chart {
+    border: 1px solid #ccc;
+    width: 100%;
+    font-family: Arial, sans-serif;
+  }
+  
+  .gantt-chart-header {
+    display: flex;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+  }
+  
+  .gantt-chart-cell {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    width: 30px; /* Фиксированная ширина ячейки дня */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-right: 1px solid #ccc;
+  }
+  
+  
+  
+  .vacation-line {
+    width: var(--vacation-width, 100%);
+    background-color: transparent; /* Убираем цвет фона */
+    height: 100%; /* Делаем линии 100% высотой, чтобы они занимали всю доступную высоту */
+    display: flex;
+    align-items: center; /* Выравниваем содержимое по вертикали по центру */
+  }
+  
+  .gantt-chart-cell.empty-cell {
+    flex: 1;
+    text-align: center;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ccc;
+  }
+  
+  .gantt-chart-body {
+    border-right: 1px solid #ccc;
+  }
+  
+  .gantt-chart-row {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .gantt-chart-cell.user-name {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    width: 30px; /* Фиксированная ширина ячейки дня */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-right: 1px solid #ccc;
+  }
+
+  .gantt-chart-cell.month {
+    flex: 1;
+    width: 30px; /* Фиксированная ширина ячейки месяца */
+    text-align: center;
+    padding: 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-right: 1px solid #ccc;
+  }
+
+  .vacation-line.status-2 {
+    background-color: #2ecc71; /* Зеленый цвет для статуса 2 */
+    color: #fff;
+    font-weight: normal;
+    text-align: center;
+    align-items: center;
+    padding: 0;
+    height: 50%;
+  }
+  
+  .vacation-line.status-1 {
+    background-color: #e7e41d; /* Желтый цвет для статуса 1 */
+    color: #000; 
+    font-weight: normal;
+    text-align: center;
+    align-items: center;
+    padding: 0;
+    height: 100%;
+  }
+  
+  .vacation-date-tooltip {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    z-index: 1;
+    margin-top: 4%; /* Reset margin */
+  }
