@@ -180,11 +180,11 @@ const VacationTypePage = ({ onClose }) => {
         </select>
       </div>
       <div className="comment-container-vac-type">
-        <label className="head-label-vac-type">Выберите руководителя:</label>
+        <label className="date-label-vac-type">Выберите руководителя:</label>
         <select
           value={selectedHead}
           onChange={(e) => setSelectedHead(e.target.value)}
-          className="head-select"
+          className="vacation-type-select"
         >
           <option value="">-- Выберите руководителя --</option>
           {heads.map((head, index) => ( // Обновление итерации по руководителям
