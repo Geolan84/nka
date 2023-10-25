@@ -47,7 +47,7 @@ class DashboardRepository:
                 # Compute and append divs and duration.
                 start_date = app["start_date"]
                 end_date = app["end_date"]
-                duration = (end_date - start_date).days
+                duration = (end_date - start_date).days + 1
                 year_begin = date(start_date.year, 1, 1)
                 start_div = (start_date - year_begin).days
                 app["duration"] = duration

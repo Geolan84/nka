@@ -3,6 +3,9 @@ from fastapi.security import HTTPAuthorizationCredentials
 from token_manager import bearer, read_token
 from config import ApplicationStatus
 from datetime import date
+import os
+import time
+from fastapi.responses import Response, FileResponse
 
 from applications.schemas import ApplicationBody
 from applications.applications_repository import ApplicationsRepository
@@ -12,17 +15,6 @@ from applications.converter import convert_app_to_pdf
 
 
 router = APIRouter(prefix="/apps", tags=["Applications"])
-
-
-# @router.get("/get_statistic")
-# async def get_statistic(token: HTTPAuthorizationCredentials = Security(bearer)):
-#     info = read_token(token)
-#     if info is None:
-#         raise HTTPException(
-#             status_code=401,
-#             detail="Not authorized. Use /auth/login endpoint."
-#         )
-#     user_id = info.get('user_id')
 
 
 @router.get("/get_apps", status_code=200)
@@ -86,25 +78,62 @@ async def change_status(
         raise HTTPException(status_code=400, detail=change_error)
 
 
-# @router.get("/get_pdf", status_code=200)
-# async def get_pdf(
-#     head_id: int,
-#     type_id: int,
-#     start_date: date,
-#     end_date: date,
-#     token: HTTPAuthorizationCredentials = Security(bearer),
-# ):
-#     info = read_token(token)
-#     if info is None:
-#         raise HTTPException(
-#             status_code=401, detail="Not authorized. Use /auth/login endpoint."
-#         )
-#     user_id = info.get("user_id")
-#     data = await ApplicationsRepository.get_print_data(
-#         type_id, start_date, end_date, user_id, head_id
-#     )
-#     convert_app_to_pdf(data)
-# return convert_app_to_pdf()
+@router.get("/get_accepted_pdf", status_code=200)
+async def get_accepted_vacation(
+    app_id: int, head_id: int, token: HTTPAuthorizationCredentials = Security(bearer)
+):
+    info = read_token(token)
+    if info is None:
+        raise HTTPException(
+            status_code=401, detail="Not authorized. Use /auth/login endpoint."
+        )
+    user_id = info.get("user_id")
+    data = await ApplicationsRepository.get_exist_print(app_id, user_id, head_id)
+    sault = f"{user_id}{int(time.time())}"
+    try:
+        convert_app_to_pdf(sault, data)
+    except:
+        raise HTTPException(status_code=400, detail="Exception. PDF can not be formed!")
+    if os.path.isfile(f"vacations/Vacation{sault}.pdf"):
+        return FileResponse(
+            path=f"vacations/Vacation{sault}.pdf",
+            filename=f"ЗаявлениеНаОтпуск.pdf",
+            media_type="multipart/form-data",
+        )
+    return Response(status_code=400)
+
+
+@router.get("/get_another_pdf", status_code=200)
+async def get_pdf(
+    head_id: int,
+    type_id: int,
+    start_date: date,
+    end_date: date,
+    token: HTTPAuthorizationCredentials = Security(bearer),
+):
+    info = read_token(token)
+    if info is None:
+        raise HTTPException(
+            status_code=401, detail="Not authorized. Use /auth/login endpoint."
+        )
+    user_id = info.get("user_id")
+    data = await ApplicationsRepository.get_print_data(
+        type_id, start_date, end_date, user_id, head_id
+    )
+
+    sault = f"{user_id}{int(time.time())}"
+    try:
+        convert_app_to_pdf(sault, data)
+    except:
+        raise HTTPException(status_code=400, detail="Exception. PDF can not be formed!")
+    if os.path.isfile(f"vacations/Vacation{sault}.pdf"):
+        return FileResponse(
+            path=f"vacations/Vacation{sault}.pdf",
+            filename=f"ЗаявлениеНаОтпуск.pdf",
+            media_type="multipart/form-data",
+        )
+        # os.remove(f"vacations/Vacation{sault}.pdf")
+    return Response(status_code=400)
 
 
 @router.post("/new_app", status_code=201)

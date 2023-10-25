@@ -186,6 +186,43 @@ class ApplicationsRepository:
             await connection.close()
 
     @staticmethod
+    async def get_vacation(app_id: int):
+        try:
+            connection = await asyncpg.connect(DATABASE_URL)
+            app = await connection.fetchrow(
+                "select type_id, start_date, end_date from applications where application_id=$1",
+                app_id,
+            )
+            return None if app is None else dict(app)
+        except Exception as e:
+            print(e)
+        finally:
+            await connection.close()
+
+    @staticmethod
+    async def get_exist_print(app_id: int, user_id: int, head_id):
+        data = await ApplicationsRepository.get_vacation(app_id)
+        data["duration"] = (data.get("end_date") - data.get("start_date")).days + 1
+        data["title"] = vacation_names.get(data.get("type_id"))
+        try:
+            connection = await asyncpg.connect(DATABASE_URL)
+            receiver = await connection.fetchrow(
+                "select first_name as head_name, second_name as head_surname, patronymic as head_patronymic from users where user_id=$1;",
+                head_id,
+            )
+            data.update(dict(receiver))
+            sender = await connection.fetchrow(
+                "select first_name, second_name, patronymic from users where user_id=$1;",
+                user_id,
+            )
+            data.update(dict(sender))
+            return data
+        except Exception as e:
+            print(e)
+        finally:
+            await connection.close()
+
+    @staticmethod
     async def get_print_data(
         type_id: int, start_date: date, end_date: date, user_id: int, head_id: int
     ):
@@ -193,19 +230,16 @@ class ApplicationsRepository:
             print_data = dict()
             print_data["start_date"] = start_date
             print_data["end_date"] = end_date
+            print_data["duration"] = abs((end_date - start_date).days) + 1
             print_data["title"] = vacation_names.get(type_id)
 
             connection = await asyncpg.connect(DATABASE_URL)
-            # print_data["receiver_department"] = await connection.fetchval(
-            #     "select department_name from users join department using(department_id) where user_id = $1;",
-            #     head_id,
-            # )
 
             receiver = await connection.fetchrow(
                 "select first_name as head_name, second_name as head_surname, patronymic as head_patronymic from users where user_id=$1;",
                 head_id,
             )
-            # print_data.update(dict(receiver))
+            print_data.update(dict(receiver))
 
             sender = await connection.fetchrow(
                 "select first_name, second_name, patronymic from users where user_id=$1;",
