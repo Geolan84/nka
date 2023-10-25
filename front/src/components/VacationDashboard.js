@@ -71,7 +71,7 @@ function VacationDashboard() {
             <div key={user.user_id} className="gantt-chart-row">
               <div className="gantt-chart-cell user-name">
                 <div className="user-name-content">
-                  {user.first_name} {user.second_name} {user.patronymic}
+                {user.second_name} {user.first_name}<br/>{user.patronymic}
                 </div>
               </div>
               {months.map((month, monthIndex) => {
@@ -104,31 +104,31 @@ function VacationDashboard() {
                   return (
                     <div key={monthIndex} className="gantt-chart-cell">
                       {vacationWidth.map((vacation, index) => (
-                        <div
-                          key={index}
-                          className={`vacation-line status-${vacation.status_id}`}
-                          style={{
-                            '--vacation-width': `${vacation.width}%`,
-                            marginLeft: `${vacation.marginLeft}%`
-                          }}
-                          onMouseEnter={() => {
-                            const tooltip = document.getElementById(`tooltip-${user.user_id}-${monthIndex}-${index}`);
-                            tooltip.style.display = 'block';
-                          }}
-                          onMouseLeave={() => {
-                            const tooltip = document.getElementById(`tooltip-${user.user_id}-${monthIndex}-${index}`);
-                            tooltip.style.display = 'none';
-                          }}
-                        >
                           <div
-                            id={`tooltip-${user.user_id}-${monthIndex}-${index}`}
-                            className="vacation-date-tooltip"
-                            
+                            key={index}
+                            className={`vacation-line status-${vacation.status_id}`}
+                            style={{
+                              '--vacation-width': `${vacation.width}%`,
+                              marginLeft: `${vacation.marginLeft}%`
+                            }}
+                            onMouseEnter={() => {
+                              const tooltip = document.getElementById(`tooltip-${user.user_id}-${monthIndex}-${index}`);
+                              tooltip.style.display = 'block';
+                            }}
+                            onMouseLeave={() => {
+                              const tooltip = document.getElementById(`tooltip-${user.user_id}-${monthIndex}-${index}`);
+                              tooltip.style.display = 'none';
+                            }}
                           >
-                            {vacation.start_date}-{vacation.end_date}<br/>{vacation.duration} дней
+                            <div
+                              id={`tooltip-${user.user_id}-${monthIndex}-${index}`}
+                              className="vacation-date-tooltip"
+                              style={{ display: 'none' }} // Скрываем подсказку при загрузке
+                            >
+                              {vacation.start_date}-{vacation.end_date}<br/>{vacation.duration} дней
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   );
               })}

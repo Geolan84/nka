@@ -29,7 +29,7 @@ def convert_app_to_pdf(sault: str, app: dict):
     pdf.add_font(
         "DejaVu",
         "",
-        f"{os.getcwd()}/applications/font/DejaVuSansCondensedBook.ttf",
+        "applications/font/DejaVuSansCondensedBook.ttf",
         uni=True,
     )
     pdf.set_font("DejaVu", size=12)

@@ -9,7 +9,8 @@ import "../css/VacationType.css";
 registerLocale("ru", ru);
 
 const VacationTypePage = ({ onClose }) => {
-  const [comment, setComment] = useState("");
+  const [selectedHead, setSelectedHead] = useState("");
+  const [heads, setHeads] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [vacationType, setVacationType] = useState(2);
@@ -17,11 +18,6 @@ const VacationTypePage = ({ onClose }) => {
   const user_id = localStorage.getItem("user_id");
   const [user, setUser] = useState(null);
   const token = localStorage.getItem("token");
-  const [isModalOpen, setIsModalOpen] = useState(true);
-
-  const handleCommentChange = (e) => {
-    setComment(e.target.value);
-  };
 
   const handleBackInProf = () => {
     onClose();
@@ -43,25 +39,43 @@ const VacationTypePage = ({ onClose }) => {
     try {
       const startDateToSend = new Date(startDate);
       startDateToSend.setDate(startDateToSend.getDate() + 1);
-
+  
       const endDateToSend = new Date(endDate);
       endDateToSend.setDate(endDateToSend.getDate() + 1);
-
-      const response = await fetch("http://localhost:8080/apps/new_app", {
-        method: "POST",
+  
+      // Параметры запроса добавляются в URL
+      const url = `http://localhost:8080/apps/get_another_pdf?head_id=${selectedHead}&type_id=${vacationType}&start_date=${startDateToSend.toISOString().split("T")[0]}&end_date=${endDateToSend.toISOString().split("T")[0]}`;
+  
+      const response = await fetch(url, {
+        method: "GET",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          type: vacationType,
-          note: comment,
-          start_date: startDateToSend.toISOString().split("T")[0],
-          end_date: endDateToSend.toISOString().split("T")[0],
-        }),
       });
-
+  
       if (response.ok) {
+        // Получение файла как Blob
+        const blob = await response.blob();
+  
+        // Имя файла, которое будет использоваться при скачивании
+        const filename = "отпуск.pdf";
+  
+        // Используйте библиотеку file-saver для скачивания файла
+        if (window.saveAs) {
+          window.saveAs(blob, filename);
+        } else {
+          // В противном случае, можно использовать нативный метод
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          a.style.display = "none";
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        }
+  
         console.log("Заявка на отпуск отправлена");
         onClose();
       } else {
@@ -71,6 +85,7 @@ const VacationTypePage = ({ onClose }) => {
       console.error("Произошла ошибка при выполнении запроса:", error);
     }
   };
+  
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -97,7 +112,31 @@ const VacationTypePage = ({ onClose }) => {
     };
 
     fetchUserProfile();
-  }, []);
+  }, [user_id, token]);
+
+  useEffect(() => {
+    const fetchHeads = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/struct/heads", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const headData = await response.json();
+          setHeads(headData.heads); // Обратите внимание на обновление этой строки
+        } else {
+          console.error("Ошибка при загрузке списка руководителей");
+        }
+      } catch (error) {
+        console.error("Произошла ошибка при выполнении запроса:", error);
+      }
+    };
+
+    fetchHeads();
+  }, [token]);
 
   const countSelectedDays = () => {
     if (startDate && endDate) {
@@ -126,55 +165,61 @@ const VacationTypePage = ({ onClose }) => {
         Выбрано {countSelectedDays()} дней отпуска
       </div>
       <div className="comment-container-vac-type">
-      <label className="date-label-vac-type">Тип отпуска:</label>
+        <label className="date-label-vac-type">Тип отпуска:</label>
       
-      <select
-        value={vacationType}
-        onChange={handleVacationTypeChange}
-        className="vacation-type-select"
-      >
-        <option value={2}>Дополнительный оплачиваемый отпуск</option>
-        <option value={3}>Отпуск без сохранения з/п</option>
-        <option value={4}>Отпуск по уходу за ребёнком</option>
-        <option value={5}>Учебный отпуск</option>
-        <option value={6}>Донорский день</option>
-      </select>
+        <select
+          value={vacationType}
+          onChange={handleVacationTypeChange}
+          className="vacation-type-select"
+        >
+          <option value={2}>Дополнительный оплачиваемый отпуск</option>
+          <option value={3}>Отпуск без сохранения з/п</option>
+          <option value={4}>Отпуск по уходу за ребёнком</option>
+          <option value={5}>Учебный отпуск</option>
+          <option value={6}>Донорский день</option>
+        </select>
       </div>
       <div className="comment-container-vac-type">
-      <label className="comment-label-vac-type">Комментарий:</label>
-      <input
-        type="text"
-        value={comment}
-        onChange={handleCommentChange}
-        className="comment-input-vac"
-      />
+        <label className="head-label-vac-type">Выберите руководителя:</label>
+        <select
+          value={selectedHead}
+          onChange={(e) => setSelectedHead(e.target.value)}
+          className="head-select"
+        >
+          <option value="">-- Выберите руководителя --</option>
+          {heads.map((head, index) => ( // Обновление итерации по руководителям
+            <option key={index} value={head.user_id}>
+              {head.full_name}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="date-container-vac-type">
-      <label className="date-label-vac-type">Дата начала:</label>
-      <DatePicker
-        selected={startDate}
-        onChange={handleStartDateChange}
-        selectsStart
-        startDate={startDate}
-        endDate={endDate}
-        locale="ru"
-        dateFormat="dd-MM-yyyy"
-        className="date-picker-vac-type"
-      />
+        <label className="date-label-vac-type">Дата начала:</label>
+        <DatePicker
+          selected={startDate}
+          onChange={handleStartDateChange}
+          selectsStart
+          startDate={startDate}
+          endDate={endDate}
+          locale="ru"
+          dateFormat="dd-MM-yyyy"
+          className="date-picker-vac-type"
+        />
       </div>
       <div className="date-container-vac-type">
-      <label className="date-label-vac-type">Дата окончания:</label>
-      <DatePicker
-        selected={endDate}
-        onChange={handleEndDateChange}
-        selectsEnd
-        startDate={startDate}
-        endDate={endDate}
-        minDate={startDate}
-        locale="ru"
-        dateFormat="dd-MM-yyyy"
-        className="date-picker-vac-type"
-      />
+        <label className="date-label-vac-type">Дата окончания:</label>
+        <DatePicker
+          selected={endDate}
+          onChange={handleEndDateChange}
+          selectsEnd
+          startDate={startDate}
+          endDate={endDate}
+          minDate={startDate}
+          locale="ru"
+          dateFormat="dd-MM-yyyy"
+          className="date-picker-vac-type"
+        />
       </div>
       <div className="action-buttons-vac-type">
         <button onClick={handleSendVacationRequest}>Отправить заявку на отпуск</button>

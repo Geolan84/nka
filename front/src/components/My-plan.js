@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/MyPlan.css"; // Подключаем стили
+import SelectHeadModal from "./SelectHeadModal";
 
 const MyPlan = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [applications, setApplications] = useState([]);
-
-  // Создаем объект с соответствиями для типов заявок
-  const typeMappings = {
-    1: 'Основной отпуск',
-    2: 'Дополнительный оплачиваемый отпуск',
-    3: 'Отпуск без сохранения з/п',
-    4: 'Отпуск по уходу за ребёнком',
-    5: 'Учебный отпуск',
-    6: 'Донорский день',
-  };
+  const [selectedApplicationId, setSelectedApplicationId] = useState(null);
+  const [heads, setHeads] = useState([]);
 
   // Создаем объект с соответствиями для статусов заявок
   const statusMappings = {
@@ -49,7 +42,6 @@ const MyPlan = () => {
           // Заменяем type_id и status_id на текст с использованием объектов с соответствиями
           const applicationsWithText = data.applications.map(application => ({
             ...application,
-            type_id: typeMappings[application.type_id],
             status_id: statusMappings[application.status_id],
           }));
           setApplications(applicationsWithText);
@@ -64,29 +56,45 @@ const MyPlan = () => {
     fetchApplications();
   }, [token]);
 
+  const openModalForApplication = (applicationId) => {
+    setSelectedApplicationId(applicationId);
+  };
+
+  const closeAndDownload = () => {
+    // Here, you can implement the download logic for the selected application
+    // Once the download is complete, you can close the modal
+    setSelectedApplicationId(null);
+  };
+
   return (
     <div className="my-plan">
       <h1 className="my-plan-title">Мои заявки на отпуск</h1>
       <table className="my-plan-table">
         <thead>
           <tr>
-            <th className="my-plan-header">Тип</th>
             <th className="my-plan-header">Комментарий</th>
             <th className="my-plan-header">Дата начала</th>
             <th className="my-plan-header">Дата окончания</th>
             <th className="my-plan-header">Статус</th>
             <th className="my-plan-header">Дата подачи</th>
+            <th className="my-plan-header">Действия</th>
           </tr>
         </thead>
         <tbody>
           {applications.map(application => (
             <tr key={application.application_id}>
-              <td className="my-plan-cell">{application.type_id}</td>
               <td className="my-plan-cell">{application.note}</td>
               <td className="my-plan-cell">{application.start_date}</td>
               <td className="my-plan-cell">{application.end_date}</td>
               <td className="my-plan-cell">{application.status_id}</td>
               <td className="my-plan-cell">{formatDateTime(application.moment)}</td>
+              <td className="my-plan-cell">
+                {application.status_id === 'Согласовано' && (
+                  <button className="my-plan-button" onClick={() => openModalForApplication(application.application_id)}>
+                    Скачать
+                  </button>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -94,6 +102,16 @@ const MyPlan = () => {
       <button className="my-plan-button login-button" onClick={() => navigate("/profile")}>
         Назад в профиль
       </button>
+      {selectedApplicationId !== null && (
+        <SelectHeadModal
+          isOpen={true}
+          onClose={closeAndDownload}
+          heads={heads}
+          selectedHead={selectedApplicationId}
+          appId={selectedApplicationId}
+          onSelectHead={() => {}}
+        />
+      )}
     </div>
   );
 };
