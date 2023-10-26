@@ -6,23 +6,24 @@ const Approve = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [apps, setApps] = useState([]);
+  const [success, setSuccess] = useState(null);
 
   const formatDateTime = (dateTimeStr) => {
     const dateTime = new Date(dateTimeStr);
     const year = dateTime.getFullYear();
-    const month = (dateTime.getMonth() + 1).toString().padStart(2, '0');
-    const day = dateTime.getDate().toString().padStart(2, '0');
-    const hours = dateTime.getHours().toString().padStart(2, '0');
-    const minutes = dateTime.getMinutes().toString().padStart(2, '0');
+    const month = (dateTime.getMonth() + 1).toString().padStart(2, "0");
+    const day = dateTime.getDate().toString().padStart(2, "0");
+    const hours = dateTime.getHours().toString().padStart(2, "0");
+    const minutes = dateTime.getMinutes().toString().padStart(2, "0");
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
   const typeMappings = {
-    2: 'Дополнительный оплачиваемый отпуск',
-    3: 'Отпуск без сохранения з/п',
-    4: 'Отпуск по уходу за ребёнком',
-    5: 'Учебный отпуск',
-    6: 'Донорский день',
+    2: "Дополнительный оплачиваемый отпуск",
+    3: "Отпуск без сохранения з/п",
+    4: "Отпуск по уходу за ребёнком",
+    5: "Учебный отпуск",
+    6: "Донорский день",
   };
 
   useEffect(() => {
@@ -37,8 +38,7 @@ const Approve = () => {
 
         if (response.ok) {
           const data = await response.json();
-          // Заменяем type_id и status_id на текст с использованием объектов с соответствиями
-          const appsWithText = data.apps.map(app => ({
+          const appsWithText = data.apps.map((app) => ({
             ...app,
             type_id: typeMappings[app.type_id],
           }));
@@ -55,7 +55,6 @@ const Approve = () => {
   }, [token]);
 
   const handleApprove = (appId) => {
-    // Отправить POST-запрос на сервер для согласования заявки
     fetch(`http://localhost:8080/apps/approve?app_id=${appId}&status_id=1`, {
       method: "POST",
       headers: {
@@ -64,9 +63,12 @@ const Approve = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.success) {
-          // Обработка успешного согласования (по желанию)
-          // Можно обновить интерфейс или выполнить другие действия
+        if (!data || data.success !== undefined) {
+          // Проверка, что data определен и имеет свойство success
+          const updatedApps = apps.filter((app) => app.application_id !== appId);
+          setApps(updatedApps);
+        } else {
+          console.error("Ошибка при согласовании заявки");
         }
       })
       .catch((error) => {
@@ -75,7 +77,6 @@ const Approve = () => {
   };
 
   const handleReject = (appId) => {
-    // Отправить POST-запрос на сервер для отказа в заявке
     fetch(`http://localhost:8080/apps/approve?app_id=${appId}&status_id=3`, {
       method: "POST",
       headers: {
@@ -84,9 +85,11 @@ const Approve = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.success) {
-          // Обработка успешного отказа (по желанию)
-          // Можно обновить интерфейс или выполнить другие действия
+        if (!data || data.success !== undefined) {
+          const updatedApps = apps.filter((app) => app.application_id !== appId);
+          setApps(updatedApps);
+        } else {
+          console.error("Ошибка при отказе в заявке");
         }
       })
       .catch((error) => {
@@ -109,7 +112,7 @@ const Approve = () => {
           </tr>
         </thead>
         <tbody>
-          {apps.map(app => (
+          {apps.map((app) => (
             <tr key={app.application_id}>
               <td className="my-plan-cell">{`${app.second_name} ${app.first_name} ${app.patronymic}`}</td>
               <td className="my-plan-cell">{app.note}</td>
@@ -119,8 +122,12 @@ const Approve = () => {
               <td className="my-plan-cell">
                 {app.status_id === 1 ? (
                   <>
-                    <button className="ToApprove" onClick={() => handleApprove(app.application_id)}>Согласовать</button>
-                    <button className="Deny" onClick={() => handleReject(app.application_id)}>Отказать</button>
+                    <button className="ToApprove" onClick={() => handleApprove(app.application_id)}>
+                      Согласовать
+                    </button>
+                    <button className="Deny" onClick={() => handleReject(app.application_id)}>
+                      Отказать
+                    </button>
                   </>
                 ) : (
                   "Нельзя согласовать"

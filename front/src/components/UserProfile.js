@@ -129,7 +129,7 @@ const UserProfile = () => {
                             {user ? (
                                 <>
                                     <p>{user.second_name} {user.first_name} {user.patronymic}</p>
-                                    <p>Отдел: {user.department_name}</p>
+                                    <p>{user.department_name}</p>
                                     <p>Email: {user.email}</p>
                                     <p>Роль: {role === "1" ? "Сотрудник" : role === "2" ? "Руководитель" : role === "3" ? "Администратор" : "Неизвестно"}</p>
                                 </>

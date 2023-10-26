@@ -140,7 +140,7 @@ const VacationPage = ({ onClose }) => {
           startDate={startDate}
           endDate={endDate}
           locale="ru"
-          dateFormat="yyyy-MM-dd"
+          dateFormat="dd-MM-yyyy"
           className="date-picker-vac"
         />
       </div>
@@ -155,7 +155,7 @@ const VacationPage = ({ onClose }) => {
           endDate={endDate}
           minDate={startDate}
           locale="ru"
-          dateFormat="yyyy-MM-dd"
+          dateFormat="dd-MM-yyyy"
           className="date-picker-vac"
         />
       </div>

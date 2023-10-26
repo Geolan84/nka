@@ -10,6 +10,8 @@ function VacationDashboard() {
   const daysInYear = 365; // Общее количество дней в году
   const emptyCellRef = useRef(null);
   const navigate = useNavigate();
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Состояние для выбранного года
+  const years = [2023, 2024, 2025, 2026]; // Доступные годы
 
   const months = [
     'Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн',
@@ -18,9 +20,9 @@ function VacationDashboard() {
 
   const handleNavigateToProfile = () => {
     navigate("/profile");
-};
+  };
 
-
+  // Получение данных при первом заходе на страницу
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,7 +38,7 @@ function VacationDashboard() {
     };
 
     fetchData();
-  }, [token]);
+  }, []); // Пустой массив зависимостей
 
   useEffect(() => {
     // Получите ширину .empty-cell и установите ее в .user-name
@@ -51,91 +53,109 @@ function VacationDashboard() {
 
   return (
     <div>
-    <div className="header0">
+      <div className="header0">
         <img src={logo} alt="Logo" />
         <h1 className="user-title">График</h1>
         <button className="user-logout" onClick={handleNavigateToProfile}>Профиль</button>
-    </div>
-    <div className="gantt-chart">
-      <div className="gantt-chart-header">
-        <div className="gantt-chart-cell empty-cell" ref={emptyCellRef}>ФИО</div>
-        {months.map((month, index) => (
-          <div key={index} className="gantt-chart-cell month">
-            {month}
-          </div>
-        ))}
       </div>
-      <div className="gantt-chart-body">
-        {userData &&
-          userData.users.map((user) => (
-            <div key={user.user_id} className="gantt-chart-row">
-              <div className="gantt-chart-cell user-name">
-                <div className="user-name-content">
-                {user.second_name} {user.first_name}<br/>{user.patronymic}
+      <div className="date-label-vac-type">
+        <label>Выберите год: </label>
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="gantt-chart">
+        <div className="gantt-chart-header">
+          <div className="gantt-chart-cell empty-cell" ref={emptyCellRef}>ФИО</div>
+          {months.map((month, index) => (
+            <div key={index} className="gantt-chart-cell month">
+              {month}
+            </div>
+          ))}
+        </div>
+        <div className="gantt-chart-body">
+          {userData &&
+            userData.users.map((user) => (
+              <div key={user.user_id} className="gantt-chart-row">
+                <div className="gantt-chart-cell user-name">
+                  <div className="user-name-content">
+                    {user.second_name} {user.first_name}<br/>{user.patronymic}
+                  </div>
                 </div>
-              </div>
-              {months.map((month, monthIndex) => {
-                const monthStartDiv = (daysInYear / months.length) * monthIndex; // Начало месяца
-                const monthDays = daysInYear / months.length;
-                const vacationWidth = user.vacations
-                  .filter((v) => {
-                    return (
-                      monthStartDiv <= v.end_div &&
-                      monthStartDiv + monthDays >= v.start_div
-                    );
-                  })
-                  .map((v) => {
-                    const startDay = Math.max(monthStartDiv, v.start_div);
-                    const endDay = Math.min(
-                      monthStartDiv + monthDays,
-                      v.end_div + 1
-                    );
-
+                {months.map((month, monthIndex) => {
+                  const monthStartDiv = (daysInYear / months.length) * monthIndex; // Начало месяца
+                  const monthDays = daysInYear / months.length;
+                  const filteredVacations = user.vacations.filter((v) => {
+                    // Фильтрация заявок на основе выбранного года
                     const startDate = new Date(v.start_date);
-                    const endDate = new Date(v.end_date);
-
-                    const formattedStartDate = `${startDate.getDate()}.${startDate.getMonth() + 1}.${startDate.getFullYear()}`;
-                    const formattedEndDate = `${endDate.getDate()}.${endDate.getMonth() + 1}.${endDate.getFullYear()}`;
-
-                    const width = ((endDay - startDay) / monthDays) * 100;
-                    const marginLeft = ((startDay - monthStartDiv) / monthDays) * 100;
-                    return { width, marginLeft, status_id: v.status_id, start_date: formattedStartDate, end_date: formattedEndDate, duration: v.duration};
+                    return startDate.getFullYear() === selectedYear;
                   });
+                  const vacationWidth = filteredVacations
+                    .filter((v) => {
+                      return (
+                        monthStartDiv <= v.end_div &&
+                        monthStartDiv + monthDays >= v.start_div
+                      );
+                    })
+                    .map((v) => {
+                      const startDay = Math.max(monthStartDiv, v.start_div);
+                      const endDay = Math.min(
+                        monthStartDiv + monthDays,
+                        v.end_div + 1
+                      );
+
+                      const startDate = new Date(v.start_date);
+                      const endDate = new Date(v.end_date);
+
+                      const formattedStartDate = `${startDate.getDate()}.${startDate.getMonth() + 1}.${startDate.getFullYear()}`;
+                      const formattedEndDate = `${endDate.getDate()}.${endDate.getMonth() + 1}.${endDate.getFullYear()}`;
+
+                      const width = ((endDay - startDay) / monthDays) * 100;
+                      const marginLeft = ((startDay - monthStartDiv) / monthDays) * 100;
+                      return { width, marginLeft, status_id: v.status_id, start_date: formattedStartDate, end_date: formattedEndDate, duration: v.duration};
+                    });
                   return (
                     <div key={monthIndex} className="gantt-chart-cell">
                       {vacationWidth.map((vacation, index) => (
+                        <div
+                          key={index}
+                          className={`vacation-line status-${vacation.status_id}`}
+                          style={{
+                            '--vacation-width': `${vacation.width}%`,
+                            marginLeft: `${vacation.marginLeft}%`
+                          }}
+                          onMouseEnter={() => {
+                            const tooltip = document.getElementById(`tooltip-${user.user_id}-${monthIndex}-${index}`);
+                            tooltip.style.display = 'block';
+                          }}
+                          onMouseLeave={() => {
+                            const tooltip = document.getElementById(`tooltip-${user.user_id}-${monthIndex}-${index}`);
+                            tooltip.style.display = 'none';
+                          }}
+                        >
                           <div
-                            key={index}
-                            className={`vacation-line status-${vacation.status_id}`}
-                            style={{
-                              '--vacation-width': `${vacation.width}%`,
-                              marginLeft: `${vacation.marginLeft}%`
-                            }}
-                            onMouseEnter={() => {
-                              const tooltip = document.getElementById(`tooltip-${user.user_id}-${monthIndex}-${index}`);
-                              tooltip.style.display = 'block';
-                            }}
-                            onMouseLeave={() => {
-                              const tooltip = document.getElementById(`tooltip-${user.user_id}-${monthIndex}-${index}`);
-                              tooltip.style.display = 'none';
-                            }}
+                            id={`tooltip-${user.user_id}-${monthIndex}-${index}`}
+                            className="vacation-date-tooltip"
+                            style={{ display: 'none' }} // Скрываем подсказку при загрузке
                           >
-                            <div
-                              id={`tooltip-${user.user_id}-${monthIndex}-${index}`}
-                              className="vacation-date-tooltip"
-                              style={{ display: 'none' }} // Скрываем подсказку при загрузке
-                            >
-                              {vacation.start_date}-{vacation.end_date}<br/>{vacation.duration} дней
-                            </div>
+                            {vacation.start_date}-{vacation.end_date}<br/>{vacation.duration} дней
                           </div>
-                        ))}
+                        </div>
+                      ))}
                     </div>
                   );
-              })}
-            </div>
-          ))}
+                })}
+              </div>
+            ))}
+        </div>
       </div>
-    </div>
     </div>
   );
 }

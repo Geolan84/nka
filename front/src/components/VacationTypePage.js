@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { registerLocale, setDefaultLocale } from "react-datepicker";
+import { registerLocale } from "react-datepicker";
 import ru from "date-fns/locale/ru";
 import "../css/VacationType.css";
 
@@ -39,27 +39,27 @@ const VacationTypePage = ({ onClose }) => {
     try {
       const startDateToSend = new Date(startDate);
       startDateToSend.setDate(startDateToSend.getDate() + 1);
-  
+
       const endDateToSend = new Date(endDate);
       endDateToSend.setDate(endDateToSend.getDate() + 1);
-  
+
       // Параметры запроса добавляются в URL
       const url = `http://localhost:8080/apps/get_another_pdf?head_id=${selectedHead}&type_id=${vacationType}&start_date=${startDateToSend.toISOString().split("T")[0]}&end_date=${endDateToSend.toISOString().split("T")[0]}`;
-  
+
       const response = await fetch(url, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (response.ok) {
         // Получение файла как Blob
         const blob = await response.blob();
-  
+
         // Имя файла, которое будет использоваться при скачивании
         const filename = "отпуск.pdf";
-  
+
         // Используйте библиотеку file-saver для скачивания файла
         if (window.saveAs) {
           window.saveAs(blob, filename);
@@ -75,7 +75,7 @@ const VacationTypePage = ({ onClose }) => {
           window.URL.revokeObjectURL(url);
           document.body.removeChild(a);
         }
-  
+
         console.log("Заявка на отпуск отправлена");
         onClose();
       } else {
@@ -85,7 +85,6 @@ const VacationTypePage = ({ onClose }) => {
       console.error("Произошла ошибка при выполнении запроса:", error);
     }
   };
-  
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -126,7 +125,9 @@ const VacationTypePage = ({ onClose }) => {
 
         if (response.ok) {
           const headData = await response.json();
-          setHeads(headData.heads); // Обратите внимание на обновление этой строки
+          // Фильтрация списка руководителей, исключая текущего пользователя
+          const filteredHeads = headData.heads.filter((head) => head.user_id !== parseInt(user_id));
+          setHeads(filteredHeads);
         } else {
           console.error("Ошибка при загрузке списка руководителей");
         }
@@ -136,8 +137,9 @@ const VacationTypePage = ({ onClose }) => {
     };
 
     fetchHeads();
-  }, [token]);
+  }, [user_id, token]);
 
+  // Вычисление количества выбранных дней
   const countSelectedDays = () => {
     if (startDate && endDate) {
       const diffTime = Math.abs(endDate - startDate);
@@ -166,7 +168,6 @@ const VacationTypePage = ({ onClose }) => {
       </div>
       <div className="comment-container-vac-type">
         <label className="date-label-vac-type">Тип отпуска:</label>
-      
         <select
           value={vacationType}
           onChange={handleVacationTypeChange}
@@ -180,14 +181,14 @@ const VacationTypePage = ({ onClose }) => {
         </select>
       </div>
       <div className="comment-container-vac-type">
-        <label className="date-label-vac-type">Выберите руководителя:</label>
+        <label className="date-label-vac-type">Составить на имя:</label>
         <select
           value={selectedHead}
           onChange={(e) => setSelectedHead(e.target.value)}
           className="vacation-type-select"
         >
           <option value="">-- Выберите руководителя --</option>
-          {heads.map((head, index) => ( // Обновление итерации по руководителям
+          {heads.map((head, index) => (
             <option key={index} value={head.user_id}>
               {head.full_name}
             </option>
@@ -222,7 +223,7 @@ const VacationTypePage = ({ onClose }) => {
         />
       </div>
       <div className="action-buttons-vac-type">
-        <button onClick={handleSendVacationRequest}>Отправить заявку на отпуск</button>
+        <button onClick={handleSendVacationRequest}>Сформировать заявление</button>
         <button onClick={handleBackInProf}>Назад в профиль</button>
       </div>
     </div>
